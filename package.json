@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "lint:prettier:fix": "prettier . --write",
-    "lint>prettier:check": "prettier . --check",
+    "lint:prettier:check": "prettier . --check",
     "lint:eslint:fix": "eslint ."
   },
   "keywords": [],
