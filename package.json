@@ -1,7 +1,7 @@
 {
   "name": "miguel-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "lint:prettier:fix": "prettier . --write",
     "lint:prettier:check": "prettier . --check",
