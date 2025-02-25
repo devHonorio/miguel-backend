@@ -39,3 +39,19 @@ export class InternalServerError extends ErrorBase {
     this.action = 'Entre em contato com suporte.'
   }
 }
+
+export class NotFoundError extends ErrorBase {
+  constructor({ action, cause, message }: ErrorBaseProps) {
+    super({ message, action, cause })
+    this.name = 'NotFoundError'
+    this.statusCode = 404
+  }
+}
+
+export class UnauthorizedError extends ErrorBase {
+  constructor({ action, cause, message }: ErrorBaseProps) {
+    super({ message, action, cause })
+    this.name = 'UnauthorizedError'
+    this.statusCode = 401
+  }
+}
