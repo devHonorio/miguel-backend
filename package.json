@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
+    "postinstall": "prisma migrate deploy && prisma generate",
     "lint:prettier:fix": "prettier . --write",
     "lint:prettier:check": "prettier . --check",
     "lint:eslint:fix": "eslint .",
