@@ -7,11 +7,12 @@
     "lint:prettier:check": "prettier . --check",
     "lint:eslint:fix": "eslint .",
     "test": "jest",
+    "test:watch": "jest --runInBand --watchAll",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "services:down": "docker compose -f infra/compose.yaml down",
     "migrate:dev": "prisma migrate dev --config prisma/prisma.config.ts ",
-    "dev": "tsx server.ts"
+    "dev": "npm run services:up && tsx --watch server.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@prisma/config": "^6.4.1",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.5",
@@ -38,8 +40,11 @@
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
+    "zod": "^3.24.2"
   }
 }
