@@ -1,11 +1,22 @@
-import express from 'express'
+import 'express-async-errors'
+import express, { Request, Response, NextFunction } from 'express'
+import { routes } from './routes'
+import ErrorBase, { InternalServerError } from './errors/error-base'
 
 const app = express()
 
-app.get('/', (req, res) => {
-  res.json({
-    ok: true,
-  })
+app.use(express.json())
+
+app.use(routes)
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof ErrorBase) {
+    res.status(err.statusCode).json(err.toJSON())
+    return
+  }
+
+  const errorPublic = new InternalServerError(err)
+  res.status(errorPublic.statusCode).json(errorPublic.toJSON())
 })
 
 app.listen(process.env.PORT ?? 3001, () => {
