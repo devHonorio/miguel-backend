@@ -17,6 +17,7 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   }
 
   const errorPublic = new InternalServerError(err)
+  console.error(errorPublic)
   res.status(errorPublic.statusCode).json(errorPublic.toJSON())
 })
 

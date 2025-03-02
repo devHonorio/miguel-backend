@@ -1,14 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateApiClient } from '../api'
 import orchestrator from '../orchestrator'
+
+const apiClient = CreateApiClient()
+
+let tokenAdmin: string
+let token: string
+
 beforeAll(async () => {
   await orchestrator.cleanUsers()
+  await orchestrator.setUserAdmin()
+  const { access_token: access_token_adimin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_adimin
+
+  await orchestrator.setUser()
+  const { access_token } = await apiClient.auth()
+  token = access_token
 })
 
-const apiClient = CreateApiClient('http://localhost:3001')
-
 describe('POST /users', () => {
-  describe('Anonymouns user', () => {
+  describe('Admin user', () => {
     const user = {
       id: '2',
       name: 'vanusa pereira',
@@ -17,10 +28,15 @@ describe('POST /users', () => {
       rulles: ['read:users', 'write:users'],
     }
     test('creating user admin', async () => {
-      const response = await apiClient.post('/users', user)
+      const response = await apiClient.post('/users', user, {
+        type: 'Bearer',
+        token: tokenAdmin,
+      })
 
       const body = await response.json()
+
       const { password, ...rest } = user
+
       expect(body).toEqual(rest)
     })
 
@@ -31,7 +47,10 @@ describe('POST /users', () => {
         phone: '4498692094',
       }
 
-      const response = await apiClient.post('/users', userPhoneInvalid)
+      const response = await apiClient.post('/users', userPhoneInvalid, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
 
       expect(response.status).toBe(400)
 
@@ -47,7 +66,10 @@ describe('POST /users', () => {
 
     test('creating user none phone', async () => {
       const user = { id: '2', name: 'José Honorio' }
-      const response = await apiClient.post('/users', user)
+      const response = await apiClient.post('/users', user, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
 
       expect(response.status).toBe(400)
 
@@ -62,7 +84,10 @@ describe('POST /users', () => {
 
     test('creating user none lastname', async () => {
       const user = { id: '3', name: 'José', phone: '44998692094' }
-      const response = await apiClient.post('/users', user)
+      const response = await apiClient.post('/users', user, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
 
       expect(response.status).toBe(400)
 
@@ -84,7 +109,10 @@ describe('POST /users', () => {
         password: '',
         rulles: [],
       }
-      const response = await apiClient.post('/users', user)
+      const response = await apiClient.post('/users', user, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
 
       expect(response.status).toBe(400)
 
@@ -98,28 +126,75 @@ describe('POST /users', () => {
       })
     })
   })
-  // describe('Anonymouns user', () => {
-  //   test('creating user', async () => {
-  //     const user = {
-  //       id: '1',
-  //       name: 'vanusa pereira',
-  //       phone: '46999222970',
-  //     }
+  describe('Anonymouns user', () => {
+    test('creating user', async () => {
+      const user = {
+        id: '1',
+        name: 'vanusa pereira',
+        phone: '46999222970',
+      }
 
-  //     await apiClient.post('/users', user)
-  //   })
-  // })
+      const response = await apiClient.post('/users', user)
 
-  // describe('Unauthoriized User', () => {
-  //   const user = {
-  //     id: '2',
-  //     name: 'vanusa pereira',
-  //     phone: '46999222970',
-  //     password: '1234',
-  //     rulles: ['read:users', 'write:users'],
-  //   }
-  //   test('creating new user without write:users rule', async () => {
-  //     await apiClient.post('/users', user)
-  //   })
-  // })
+      expect(response.status).toBe(401)
+
+      const body = await response.json()
+
+      expect(body).toEqual({
+        action: 'Verifique se o token foi setado.',
+        message: 'Usuário não autorizado.',
+        name: 'UnauthorizedError',
+        statusCode: 401,
+      })
+    })
+
+    test('creating user', async () => {
+      const user = {
+        id: '1',
+        name: 'vanusa pereira',
+        phone: '46999222970',
+      }
+
+      const response = await apiClient.post('/users', user, {
+        token: tokenAdmin,
+      })
+
+      expect(response.status).toBe(401)
+
+      const body = await response.json()
+
+      expect(body).toEqual({
+        action: 'Verifique o se o tipo do token é "Bearer"',
+        message: 'Usuário não autorizado.',
+        name: 'UnauthorizedError',
+        statusCode: 401,
+      })
+    })
+  })
+
+  describe('Unauthoriized User', () => {
+    const user = {
+      id: '2',
+      name: 'vanusa pereira',
+      phone: '46999222970',
+      password: '1234',
+      rulles: ['read:users', 'write:users'],
+    }
+    test('creating new user without write:users rule', async () => {
+      const response = await apiClient.post('/users', user, {
+        token,
+        type: 'Bearer',
+      })
+
+      expect(response.status).toBe(401)
+
+      const bory = await response.json()
+      expect(bory).toEqual({
+        action: 'Verifique se usuário tem rulle "write:users".',
+        message: 'Usuário não autorizado.',
+        name: 'UnauthorizedError',
+        statusCode: 401,
+      })
+    })
+  })
 })
