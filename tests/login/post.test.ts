@@ -6,7 +6,7 @@ beforeAll(async () => {
   await orchestrator.setUserAdmin()
 })
 
-const apiClient = CreateApiClient('http://localhost:3001')
+const apiClient = CreateApiClient()
 
 describe('POST /login', () => {
   describe('Anonymous user', () => {
