@@ -16,7 +16,7 @@
     "services:down": "docker compose -f infra/compose.yaml down",
     "migrate:dev": "prisma migrate dev --config prisma/prisma.config.ts ",
     "migrate:deploy": "prisma migrate deploy --config prisma/prisma.config.ts ",
-    "dev": "npm run services:up && tsx --watch src/server.ts",
+    "dev": "npm run services:up && npm run waitForPostgres && npm run migrate:dev && tsx --watch src/server.ts",
     "waitForPostgres": "tsx src/scripts/wait-for-postgres.ts",
     "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts"
   },
