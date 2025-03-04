@@ -14,7 +14,7 @@ function checkNodeEnvIsDevelopment() {
     return
   }
 
-  console.log(`\n\nAmbintende is ${process.env.NODE_ENV}`)
+  console.log(`\n\nAmbiente de ${process.env.NODE_ENV}`)
   console.log('Serviços não são necessários ser levantados')
 }
 
