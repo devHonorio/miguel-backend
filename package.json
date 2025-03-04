@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "preinstall": "npm run sercivesUpDevelopment",
-    "postinstall": "npm run migratePostInstall",
+    "postinstall": "npm run sercivesUpDevelopment && npm run waitForPostgres && npm run migrate:deploy",
     "lint:prettier:fix": "prettier . --write",
     "lint:prettier:check": "prettier . --check",
     "lint:eslint:fix": "eslint .",
@@ -19,8 +18,7 @@
     "migrate:deploy": "prisma migrate deploy --config prisma/prisma.config.ts ",
     "dev": "npm run services:up && tsx --watch src/server.ts",
     "waitForPostgres": "tsx src/scripts/wait-for-postgres.ts",
-    "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts",
-    "migratePostInstall": "tsx src/scripts/migrate-post-install.ts"
+    "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts"
   },
   "keywords": [],
   "author": "",

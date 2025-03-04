@@ -4,18 +4,18 @@ import { exec } from 'node:child_process'
 
 dotenv.expand(config({ path: '.env.development' }))
 
-function checkNodeEnvIsDevelopment() {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`\nAmbintende is ${process.env.NODE_ENV}`)
-    console.log('Levantando serviços')
-    exec('npm run services:up', (_err, stdout) => {
-      console.log(stdout)
-    })
-    return
-  }
+if (process.env.VERCEL_TARGET_ENV === 'development') {
+  console.log(`\nAmbintende is ${process.env.VERCEL_TARGET_ENV}`)
 
-  console.log(`\n\nAmbiente de ${process.env.NODE_ENV}`)
-  console.log('Serviços não são necessários ser levantados')
+  console.log('Levantando serviços')
+
+  exec('npm run services:up', (_err, stdout) => {
+    console.log(stdout)
+  })
+} else {
+  console.log(`\n\nAmbiente de ${process.env.VERCEL_TARGET_ENV}`)
+
+  console.log(
+    'Serviços não são necessários ser levantados para ambientes que não seja development',
+  )
 }
-
-checkNodeEnvIsDevelopment()
