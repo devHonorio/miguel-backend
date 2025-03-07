@@ -52,7 +52,7 @@ const userSchema = z.object({
       message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
     }),
   password: z.string(),
-  rulles: z.array(z.enum(['read:users', 'write:users'])),
+  rulles: z.array(z.enum(['read:users', 'write:users', 'write:cups'])),
 })
 
 export type UserType = z.infer<typeof userSchema>
