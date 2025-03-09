@@ -19,5 +19,12 @@ const create = async ({ size }: CupType) => {
   return cup
 }
 
-const cupServices = { create }
+const findAll = async () => {
+  return await prisma.cup.findMany({
+    orderBy: { size: 'asc' },
+    select: { size: true },
+  })
+}
+
+const cupServices = { create, findAll }
 export default cupServices

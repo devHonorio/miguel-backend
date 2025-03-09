@@ -36,6 +36,12 @@ async function cleanCups() {
   await prisma.cup.deleteMany()
 }
 
-const orchestrator = { cleanUsers, setUserAdmin, setUser, cleanCups }
+async function setCups() {
+  await prisma.cup.createMany({
+    data: [{ size: 300 }, { size: 400 }, { size: 500 }],
+  })
+}
+
+const orchestrator = { cleanUsers, setUserAdmin, setUser, cleanCups, setCups }
 
 export default orchestrator

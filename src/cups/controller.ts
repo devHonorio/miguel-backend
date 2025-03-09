@@ -9,6 +9,12 @@ const create: RequestHandler = async (req, res) => {
 
   res.status(201).json(cup)
 }
-const cupsController = { create }
+
+const findAll: RequestHandler = async (req, res) => {
+  const cups = await cupServices.findAll()
+  res.json(cups)
+}
+
+const cupsController = { create, findAll }
 
 export default cupsController

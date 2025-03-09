@@ -25,3 +25,5 @@ routes.post(
   cupsMiddlewares.authorization,
   cupsController.create,
 )
+
+routes.get('/cups', cupsController.findAll)

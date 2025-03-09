@@ -46,5 +46,9 @@ export const CreateApiClient = () => {
     return (await response.json()) as { access_token: string }
   }
 
-  return { post, authAdmin, auth }
+  const get = async (route: string) => {
+    return await fetch(baseUrl + route)
+  }
+
+  return { post, authAdmin, auth, get }
 }
