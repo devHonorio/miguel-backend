@@ -13,6 +13,7 @@ model User {
   phone    String   @unique
   password String
   rulles   String[]
+  is_admin Boolean  @default(false)
 
   @@map("users")
 }

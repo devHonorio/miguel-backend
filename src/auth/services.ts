@@ -8,7 +8,14 @@ import { UserType } from '../users/entities/User'
 async function login(phone: string, password: string) {
   const user = await prisma.user.findUnique({
     where: { phone },
-    select: { password: true, name: true, phone: true, id: true, rulles: true },
+    select: {
+      password: true,
+      name: true,
+      phone: true,
+      id: true,
+      rulles: true,
+      is_admin: true,
+    },
   })
 
   if (!user)
@@ -30,6 +37,7 @@ async function login(phone: string, password: string) {
       name: user.name,
       phone: user.phone,
       rulles: user.rulles as UserType['rulles'],
+      is_admin: user.is_admin,
     },
     process.env.SECRET!,
     { subject: user.id, expiresIn: '500d' },

@@ -1,9 +1,11 @@
+import { decode } from 'jsonwebtoken'
 import { CreateApiClient } from '../api'
 import orchestrator from '../orchestrator'
 
 beforeAll(async () => {
   await orchestrator.cleanUsers()
   await orchestrator.setUserAdmin()
+  await orchestrator.setUser()
 })
 
 const apiClient = CreateApiClient()
@@ -18,9 +20,34 @@ describe('POST /login', () => {
 
       expect(response.status).toBe(200)
 
-      const body = await response.json()
+      const body = (await response.json()) as { access_token: string }
 
       expect(body).toHaveProperty('access_token')
+
+      const payload = decode(body.access_token) as { is_admin: boolean }
+
+      expect(payload).not.toBeNull()
+
+      expect(payload.is_admin).toBe(true)
+    })
+
+    test('logging user', async () => {
+      const response = await apiClient.post('/login', {
+        phone: '11111111111',
+        password: '1111',
+      })
+
+      expect(response.status).toBe(200)
+
+      const body = (await response.json()) as { access_token: string }
+
+      expect(body).toHaveProperty('access_token')
+
+      const payload = decode(body.access_token) as { is_admin: boolean }
+
+      expect(payload).not.toBeNull()
+
+      expect(payload.is_admin).toBe(false)
     })
 
     test('logging in with user not found', async () => {
