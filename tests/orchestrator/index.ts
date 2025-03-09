@@ -15,6 +15,7 @@ async function setUserAdmin() {
       password: await hash('0000', SALT_OR_ROUNDS),
       phone: '00000000000',
       rulles: rulles,
+      is_admin: true,
     },
   })
 }
