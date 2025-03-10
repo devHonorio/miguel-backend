@@ -50,5 +50,12 @@ export const CreateApiClient = () => {
     return await fetch(baseUrl + route)
   }
 
-  return { post, authAdmin, auth, get }
+  const remove = async (route: string, auth?: HeadersTypes) => {
+    return await fetch(baseUrl + route, {
+      method: 'DELETE',
+      headers: headers(auth),
+    })
+  }
+
+  return { post, authAdmin, auth, get, delete: remove }
 }

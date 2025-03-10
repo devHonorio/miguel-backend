@@ -15,6 +15,13 @@ const findAll: RequestHandler = async (req, res) => {
   res.json(cups)
 }
 
-const cupsController = { create, findAll }
+const remove: RequestHandler = async (req, res) => {
+  const { size } = Cup.delete({ size: +req.params.size })
+
+  await cupServices.delete(size)
+
+  res.json({ statusCode: 200 })
+}
+const cupsController = { create, findAll, remove }
 
 export default cupsController

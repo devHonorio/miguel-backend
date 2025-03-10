@@ -29,8 +29,27 @@ function create(cup: CupType) {
   }
 }
 
+const remove = (cup: CupType) => {
+  try {
+    const { size } = cupSchema.parse({ size: +cup.size })
+
+    return {
+      size,
+    }
+  } catch (error) {
+    const err = error as ZodError
+
+    throw new BadRequestError({
+      message: err.issues[0].message,
+      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      cause: error,
+    })
+  }
+}
+
 const Cup = {
   create,
+  delete: remove,
 }
 
 export default Cup

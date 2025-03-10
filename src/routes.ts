@@ -22,8 +22,15 @@ routes.post(
 routes.post(
   '/cups',
   UserAuthMiddlewares.authMiddleware,
-  cupsMiddlewares.authorization,
+  cupsMiddlewares.write,
   cupsController.create,
 )
 
 routes.get('/cups', cupsController.findAll)
+
+routes.delete(
+  '/cups/:size',
+  UserAuthMiddlewares.authMiddleware,
+  cupsMiddlewares.delete,
+  cupsController.remove,
+)

@@ -26,5 +26,19 @@ const findAll = async () => {
   })
 }
 
-const cupServices = { create, findAll }
+const remove = async (size: number) => {
+  const cupExists = await prisma.cup.findUnique({ where: { size } })
+
+  if (!cupExists)
+    throw new BadRequestError({
+      action: 'Verifique a propiedade "size"',
+      message: 'Copo não existe.',
+    })
+
+  await prisma.cup.delete({
+    where: { size },
+  })
+}
+
+const cupServices = { create, findAll, delete: remove }
 export default cupServices

@@ -8,7 +8,11 @@ async function cleanUsers() {
 }
 
 async function setUserAdmin() {
-  const rulles: UserType['rulles'] = ['write:users', 'write:cups']
+  const rulles: UserType['rulles'] = [
+    'write:users',
+    'write:cups',
+    'delete:cups',
+  ]
   await prisma.user.create({
     data: {
       name: 'josé honorio',
