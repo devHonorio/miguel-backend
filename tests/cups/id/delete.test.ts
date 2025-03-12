@@ -1,5 +1,5 @@
-import { CreateApiClient } from '../api'
-import orchestrator from '../orchestrator'
+import { CreateApiClient } from '../../api'
+import orchestrator from '../../orchestrator'
 
 const apiClient = CreateApiClient()
 
