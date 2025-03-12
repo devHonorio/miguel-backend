@@ -34,3 +34,10 @@ routes.delete(
   cupsMiddlewares.delete,
   cupsController.remove,
 )
+
+routes.get(
+  '/cups/:id',
+  UserAuthMiddlewares.authMiddleware,
+  cupsMiddlewares.read,
+  cupsController.findUnique,
+)

@@ -53,7 +53,13 @@ const userSchema = z.object({
     }),
   password: z.string(),
   rulles: z.array(
-    z.enum(['read:users', 'write:users', 'write:cups', 'delete:cups']),
+    z.enum([
+      'read:users',
+      'write:users',
+      'write:cups',
+      'delete:cups',
+      'read:cups',
+    ]),
   ),
 })
 

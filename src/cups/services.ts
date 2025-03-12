@@ -1,5 +1,5 @@
 import { prisma } from '../../prisma/prisma-client'
-import { BadRequestError } from '../errors/error-base'
+import { BadRequestError, NotFoundError } from '../errors/error-base'
 import { CupType } from './entities/Cup'
 
 const create = async ({ size }: CupType) => {
@@ -22,7 +22,6 @@ const create = async ({ size }: CupType) => {
 const findAll = async () => {
   return await prisma.cup.findMany({
     orderBy: { size: 'asc' },
-    select: { size: true },
   })
 }
 
@@ -40,5 +39,17 @@ const remove = async (size: number) => {
   })
 }
 
-const cupServices = { create, findAll, delete: remove }
+const findUnique = async (id: string) => {
+  const cup = await prisma.cup.findUnique({ where: { id } })
+
+  if (!cup)
+    throw new NotFoundError({
+      action: 'Verifique a propiedade "id".',
+      message: 'Copo não existe.',
+    })
+
+  return cup
+}
+
+const cupServices = { create, findAll, delete: remove, findUnique }
 export default cupServices

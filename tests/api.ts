@@ -46,8 +46,10 @@ export const CreateApiClient = () => {
     return (await response.json()) as { access_token: string }
   }
 
-  const get = async (route: string) => {
-    return await fetch(baseUrl + route)
+  const get = async (route: string, auth?: HeadersTypes) => {
+    return await fetch(baseUrl + route, {
+      headers: headers(auth),
+    })
   }
 
   const remove = async (route: string, auth?: HeadersTypes) => {

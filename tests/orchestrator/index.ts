@@ -12,6 +12,7 @@ async function setUserAdmin() {
     'write:users',
     'write:cups',
     'delete:cups',
+    'read:cups',
   ]
   await prisma.user.create({
     data: {
@@ -41,9 +42,11 @@ async function cleanCups() {
 }
 
 async function setCups() {
-  await prisma.cup.createMany({
+  const cups = await prisma.cup.createManyAndReturn({
     data: [{ size: 300 }, { size: 400 }, { size: 500 }],
   })
+
+  return cups
 }
 
 const orchestrator = { cleanUsers, setUserAdmin, setUser, cleanCups, setCups }

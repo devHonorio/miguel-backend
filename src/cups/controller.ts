@@ -22,6 +22,16 @@ const remove: RequestHandler = async (req, res) => {
 
   res.json({ statusCode: 200 })
 }
-const cupsController = { create, findAll, remove }
+
+const findUnique: RequestHandler = async (req, res) => {
+  const { id } = req.params
+
+  const cup = await cupServices.findUnique(id)
+
+  res.json(cup)
+}
+
+
+const cupsController = { create, findAll, remove, findUnique }
 
 export default cupsController
