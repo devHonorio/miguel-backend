@@ -17,3 +17,10 @@ model User {
 
   @@map("users")
 }
+
+model Cup {
+  id   String @id @default(uuid())
+  size Int    @unique
+
+  @@map("cups")
+}

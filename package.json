@@ -17,7 +17,7 @@
     "migrate:dev": "prisma migrate dev --config prisma/prisma.config.ts ",
     "migrate:deploy": "prisma migrate deploy --config prisma/prisma.config.ts ",
     "generate": "prisma generate --config prisma/prisma.config.ts ",
-    "dev": "npm run services:up && npm run waitForPostgres && npm run migrate:dev && tsx --watch src/server.ts",
+    "dev": "npm run services:up && npm run waitForPostgres && npm run migrate:dev && tsx setUser.ts && tsx --watch src/server.ts",
     "waitForPostgres": "tsx src/scripts/wait-for-postgres.ts",
     "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts"
   },

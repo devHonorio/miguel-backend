@@ -8,7 +8,12 @@ async function cleanUsers() {
 }
 
 async function setUserAdmin() {
-  const rulles: UserType['rulles'] = ['write:users']
+  const rulles: UserType['rulles'] = [
+    'write:users',
+    'write:cups',
+    'delete:cups',
+    'read:cups',
+  ]
   await prisma.user.create({
     data: {
       name: 'josé honorio',
@@ -31,6 +36,19 @@ async function setUser() {
     },
   })
 }
-const orchestrator = { cleanUsers, setUserAdmin, setUser }
+
+async function cleanCups() {
+  await prisma.cup.deleteMany()
+}
+
+async function setCups() {
+  const cups = await prisma.cup.createManyAndReturn({
+    data: [{ size: 300 }, { size: 400 }, { size: 500 }],
+  })
+
+  return cups
+}
+
+const orchestrator = { cleanUsers, setUserAdmin, setUser, cleanCups, setCups }
 
 export default orchestrator
