@@ -6,7 +6,14 @@ import cors from 'cors'
 
 const app = express()
 
-app.use(cors())
+app.use(
+  cors({
+    origin:
+      process.env.VERCEL_TARGET_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://miguelacai.vercel.app',
+  }),
+)
 
 app.use(express.json())
 
