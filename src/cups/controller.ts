@@ -31,7 +31,13 @@ const findUnique: RequestHandler = async (req, res) => {
   res.json(cup)
 }
 
+const update: RequestHandler = async (req, res) => {
+  const { id, size } = Cup.update({ id: req.params.id, size: req.body.size })
 
-const cupsController = { create, findAll, remove, findUnique }
+  const cup = await cupServices.update(id, size)
+
+  res.json(cup)
+}
+const cupsController = { create, findAll, remove, findUnique, update }
 
 export default cupsController

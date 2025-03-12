@@ -59,5 +59,13 @@ export const CreateApiClient = () => {
     })
   }
 
-  return { post, authAdmin, auth, get, delete: remove }
+  const patch = async <T>(route: string, data: T, auth?: HeadersTypes) => {
+    return await fetch(baseUrl + route, {
+      method: 'PATCH',
+      headers: headers(auth),
+      body: JSON.stringify(data),
+    })
+  }
+
+  return { post, authAdmin, auth, get, delete: remove, patch }
 }

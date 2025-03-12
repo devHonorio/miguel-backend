@@ -51,5 +51,16 @@ const findUnique = async (id: string) => {
   return cup
 }
 
-const cupServices = { create, findAll, delete: remove, findUnique }
+const update = async (id: string, size: number) => {
+  const cupExists = await prisma.cup.findUnique({ where: { id } })
+
+  if (!cupExists)
+    throw new NotFoundError({
+      message: 'Copo não existe.',
+      action: 'Verifique a propiedade "id".',
+    })
+
+  return await prisma.cup.update({ where: { id }, data: { size } })
+}
+const cupServices = { create, findAll, delete: remove, findUnique, update }
 export default cupServices

@@ -47,9 +47,33 @@ const remove = (cup: CupType) => {
   }
 }
 
+const cupSchemaUpdate = cupSchema.extend({ id: z.string() })
+
+type CupSchemaUpdateType = z.infer<typeof cupSchemaUpdate>
+
+const update = (cup: CupSchemaUpdateType) => {
+  try {
+    const { size, id } = cupSchemaUpdate.parse(cup)
+
+    return {
+      size,
+      id,
+    }
+  } catch (error) {
+    const err = error as ZodError
+
+    throw new BadRequestError({
+      message: err.issues[0].message,
+      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      cause: error,
+    })
+  }
+}
+
 const Cup = {
   create,
   delete: remove,
+  update,
 }
 
 export default Cup

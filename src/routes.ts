@@ -41,3 +41,10 @@ routes.get(
   cupsMiddlewares.read,
   cupsController.findUnique,
 )
+
+routes.patch(
+  '/cups/:id',
+  UserAuthMiddlewares.authMiddleware,
+  cupsMiddlewares.write,
+  cupsController.update,
+)
