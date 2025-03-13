@@ -43,7 +43,11 @@ async function cleanCups() {
 
 async function setCups() {
   const cups = await prisma.cup.createManyAndReturn({
-    data: [{ size: 300 }, { size: 400 }, { size: 500 }],
+    data: [
+      { size: 300, price: 10, description: 'Tem copo', in_stock: true },
+      { size: 400, price: 20, description: 'Tem copo', in_stock: true },
+      { size: 500, price: 30, description: 'Tem copo', in_stock: true },
+    ],
   })
 
   return cups

@@ -1,11 +1,14 @@
+import { Cup } from '@prisma/client'
 import { CreateApiClient } from '../api'
 import orchestrator from '../orchestrator'
 
 const apiClient = CreateApiClient()
 
+let cups: Cup[]
+
 beforeAll(async () => {
   await orchestrator.cleanCups()
-  await orchestrator.setCups()
+  cups = await orchestrator.setCups()
 })
 
 describe('GET /cups', () => {
@@ -17,17 +20,7 @@ describe('GET /cups', () => {
 
       const body = (await response.json()) as { id: string }[]
 
-      expect(body).toEqual([
-        {
-          size: 300,
-        },
-        {
-          size: 400,
-        },
-        {
-          size: 500,
-        },
-      ])
+      expect(body).toEqual(cups)
     })
   })
 })
