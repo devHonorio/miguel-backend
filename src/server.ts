@@ -6,7 +6,7 @@ import cors from 'cors'
 
 const app = express()
 const environments = {
-  preview: 'https://miguelacaipreview.vercel.app/',
+  preview: 'https://miguelacaipreview.vercel.app',
   development: 'http://localhost:3000',
   production: 'https://miguelacai.vercel.app',
 }
