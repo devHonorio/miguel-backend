@@ -1,7 +1,7 @@
 import { compare } from 'bcrypt'
 import { prisma } from '../../prisma/prisma-client'
 
-import { sign } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { NotFoundError, UnauthorizedError } from '../errors/error-base'
 import { UserType } from '../users/entities/User'
 
@@ -32,7 +32,7 @@ async function login(phone: string, password: string) {
       message: 'Senha incorreta.',
     })
 
-  const access_token = sign(
+  const access_token = jwt.sign(
     {
       name: user.name,
       phone: user.phone,

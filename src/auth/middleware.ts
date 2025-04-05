@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { InternalServerError, UnauthorizedError } from '../errors/error-base'
-import { verify } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 const authMiddleware = async (
   req: Request,
@@ -24,7 +24,7 @@ const authMiddleware = async (
     })
 
   try {
-    const payload = verify(token, process.env.SECRET!)
+    const payload = jwt.verify(token, process.env.SECRET!)
 
     if (typeof payload === 'string')
       throw new InternalServerError('Payload não pode ser uma string.')
