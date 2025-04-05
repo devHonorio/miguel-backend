@@ -7,17 +7,22 @@ const cupSchema = z.object({
       invalid_type_error: 'Tamanho do copo deve ser um numero inteiro.',
     })
     .int('Tamanho do copo deve ser um numero inteiro.'),
+  price: z.number({
+    invalid_type_error: 'Tamanho do copo deve ser um numero.',
+  }),
+  in_stock: z.boolean({
+    invalid_type_error: 'Em estoque deve ser verdadeiro ou falso.',
+  }),
+  description: z.string().max(300, 'Digite até 300 caracteres.'),
 })
 
 export type CupType = z.infer<typeof cupSchema>
 
 function create(cup: CupType) {
   try {
-    const { size } = cupSchema.parse(cup)
+    const cupParse = cupSchema.parse(cup)
 
-    return {
-      size,
-    }
+    return cupParse
   } catch (error) {
     const err = error as ZodError
 
@@ -29,12 +34,12 @@ function create(cup: CupType) {
   }
 }
 
-const remove = (cup: CupType) => {
+const remove = (size: number) => {
   try {
-    const { size } = cupSchema.parse({ size: +cup.size })
+    const { size: sizeParse } = cupSchema.pick({ size: true }).parse({ size })
 
     return {
-      size,
+      size: sizeParse,
     }
   } catch (error) {
     const err = error as ZodError
@@ -49,16 +54,13 @@ const remove = (cup: CupType) => {
 
 const cupSchemaUpdate = cupSchema.extend({ id: z.string() })
 
-type CupSchemaUpdateType = z.infer<typeof cupSchemaUpdate>
+export type CupSchemaUpdateType = z.infer<typeof cupSchemaUpdate>
 
 const update = (cup: CupSchemaUpdateType) => {
   try {
-    const { size, id } = cupSchemaUpdate.parse(cup)
+    const cupParse = cupSchemaUpdate.parse(cup)
 
-    return {
-      size,
-      id,
-    }
+    return cupParse
   } catch (error) {
     const err = error as ZodError
 

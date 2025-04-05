@@ -16,7 +16,7 @@ const findAll: RequestHandler = async (req, res) => {
 }
 
 const remove: RequestHandler = async (req, res) => {
-  const { size } = Cup.delete({ size: +req.params.size })
+  const { size } = Cup.delete(+req.params.size)
 
   await cupServices.delete(size)
 
@@ -32,9 +32,9 @@ const findUnique: RequestHandler = async (req, res) => {
 }
 
 const update: RequestHandler = async (req, res) => {
-  const { id, size } = Cup.update({ id: req.params.id, size: req.body.size })
+  const cupBory = Cup.update({ id: req.params.id, ...req.body })
 
-  const cup = await cupServices.update(id, size)
+  const cup = await cupServices.update(cupBory)
 
   res.json(cup)
 }

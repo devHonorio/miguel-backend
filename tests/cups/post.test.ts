@@ -86,6 +86,9 @@ describe('POST /cups', () => {
   describe('Admin user', () => {
     const cup = {
       size: 300,
+      price: 16,
+      in_stock: true,
+      description: 'Escolha até 3 acompanhamentos',
     }
     test('creating cup', async () => {
       const response = await apiClient.post('/cups', cup, {
@@ -120,6 +123,53 @@ describe('POST /cups', () => {
       })
     })
 
+    test('creating cup with type price string', async () => {
+      const cupSizeInvalid = {
+        size: 100,
+        price: 'jj',
+      }
+
+      const response = await apiClient.post('/cups', cupSizeInvalid, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
+
+      expect(response.status).toBe(400)
+
+      const body = await response.json()
+
+      expect(body).toEqual({
+        action: 'Verifique se a propiedade "price" está correta.',
+        message: 'Tamanho do copo deve ser um numero.',
+        name: 'BadRequestError',
+        statusCode: 400,
+      })
+    })
+
+    test('creating cup with type in_stock not boolean', async () => {
+      const cupSizeInvalid = {
+        size: 100,
+        price: 10.5,
+        in_stock: '---',
+      }
+
+      const response = await apiClient.post('/cups', cupSizeInvalid, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
+
+      expect(response.status).toBe(400)
+
+      const body = await response.json()
+
+      expect(body).toEqual({
+        action: 'Verifique se a propiedade "in_stock" está correta.',
+        message: 'Em estoque deve ser verdadeiro ou falso.',
+        name: 'BadRequestError',
+        statusCode: 400,
+      })
+    })
+
     test('creating cup with number float', async () => {
       const user = { size: 2.5 }
       const response = await apiClient.post('/cups', user, {
@@ -138,8 +188,32 @@ describe('POST /cups', () => {
       })
     })
 
+    test('creating cup with descrption length +301', async () => {
+      const cup = {
+        size: 25,
+        price: 10,
+        in_stock: true,
+        description:
+          'Imagine um copo de açaí, uma sinfonia de sabores e texturas que se unem em uma experiência verdadeiramente brasileira. A base, um creme denso e roxo-escuro, feito da polpa da fruta amazônica, exala um aroma terroso e levemente adocicado. A textura é um convite à gula: cremosa, porém com pequenos pedaços da fruta que se dissolvem na boca, liberando um sabor único e inconfundível. O doce do açaí, sutil e equilibrado, contrasta com a acidez suave da fruta, criando uma harmonia perfeita.',
+      }
+      const response = await apiClient.post('/cups', cup, {
+        token: tokenAdmin,
+        type: 'Bearer',
+      })
+
+      expect(response.status).toBe(400)
+
+      const body = await response.json()
+      expect(body).toEqual({
+        action: 'Verifique se a propiedade "description" está correta.',
+        message: 'Digite até 300 caracteres.',
+        name: 'BadRequestError',
+        statusCode: 400,
+      })
+    })
+
     test('creating exists cup', async () => {
-      const cup = { size: 300 }
+      const cup = { size: 300, price: 10, in_stock: true, description: '' }
       const response = await apiClient.post('/cups', cup, {
         token: tokenAdmin,
         type: 'Bearer',

@@ -90,7 +90,13 @@ describe('GET /cups:id', () => {
 
       const bory = (await response.json()) as { id: string }
 
-      expect(bory).toEqual({ size: 300, id: bory.id })
+      expect(bory).toEqual({
+        size: 300,
+        id: bory.id,
+        in_stock: true,
+        price: 10,
+        description: 'Tem copo',
+      })
     })
 
     test('getting not exists cup', async () => {

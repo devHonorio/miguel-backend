@@ -61,6 +61,7 @@ const userSchema = z.object({
       'read:cups',
     ]),
   ),
+  is_admin: z.boolean().optional(),
 })
 
 export type UserType = z.infer<typeof userSchema>

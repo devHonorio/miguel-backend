@@ -1,9 +1,9 @@
 import { prisma } from '../../prisma/prisma-client'
 import { BadRequestError, NotFoundError } from '../errors/error-base'
-import { CupType } from './entities/Cup'
+import { CupSchemaUpdateType, CupType } from './entities/Cup'
 
-const create = async ({ size }: CupType) => {
-  const cupExists = await prisma.cup.findUnique({ where: { size } })
+const create = async (cup: CupType) => {
+  const cupExists = await prisma.cup.findUnique({ where: { size: cup.size } })
 
   if (cupExists)
     throw new BadRequestError({
@@ -11,12 +11,11 @@ const create = async ({ size }: CupType) => {
       action: 'Verifique se a propiedade "size"',
     })
 
-  const cup = await prisma.cup.create({
-    data: { size },
-    select: { id: true, size: true },
+  const cupResponse = await prisma.cup.create({
+    data: cup,
   })
 
-  return cup
+  return cupResponse
 }
 
 const findAll = async () => {
@@ -51,7 +50,7 @@ const findUnique = async (id: string) => {
   return cup
 }
 
-const update = async (id: string, size: number) => {
+const update = async ({ id, ...cup }: CupSchemaUpdateType) => {
   const cupExists = await prisma.cup.findUnique({ where: { id } })
 
   if (!cupExists)
@@ -60,7 +59,7 @@ const update = async (id: string, size: number) => {
       action: 'Verifique a propiedade "id".',
     })
 
-  return await prisma.cup.update({ where: { id }, data: { size } })
+  return await prisma.cup.update({ where: { id }, data: cup })
 }
 const cupServices = { create, findAll, delete: remove, findUnique, update }
 export default cupServices
