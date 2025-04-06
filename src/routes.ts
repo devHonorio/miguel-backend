@@ -26,7 +26,7 @@ routes.post(
   cupsController.create,
 )
 
-routes.get('/cups', cupsController.findAll)
+routes.get('/cups', cupsMiddlewares.auth, cupsController.findAll)
 
 routes.delete(
   '/cups/:size',

@@ -47,6 +47,7 @@ async function setCups() {
       { size: 300, price: 10, description: 'Tem copo', in_stock: true },
       { size: 400, price: 20, description: 'Tem copo', in_stock: true },
       { size: 500, price: 30, description: 'Tem copo', in_stock: true },
+      { size: 600, price: 40, description: 'Tem copo', in_stock: false },
     ],
   })
 

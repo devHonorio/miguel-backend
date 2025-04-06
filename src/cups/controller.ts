@@ -11,7 +11,14 @@ const create: RequestHandler = async (req, res) => {
 }
 
 const findAll: RequestHandler = async (req, res) => {
-  const cups = await cupServices.findAll()
+  if (req.user?.is_admin) {
+    const cups = await cupServices.findAll()
+    res.json(cups)
+    return
+  }
+
+  const cups = await cupServices.findInStock()
+
   res.json(cups)
 }
 
