@@ -25,7 +25,6 @@ app.use(routes)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
-  console.log(err)
   if (err instanceof ErrorBase) {
     res.status(err.statusCode).json(err.toJSON())
     return

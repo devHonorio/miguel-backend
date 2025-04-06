@@ -24,6 +24,13 @@ const findAll = async () => {
   })
 }
 
+const findInStock = async () => {
+  return await prisma.cup.findMany({
+    orderBy: { size: 'asc' },
+    where: { in_stock: true },
+  })
+}
+
 const remove = async (size: number) => {
   const cupExists = await prisma.cup.findUnique({ where: { size } })
 
@@ -61,5 +68,12 @@ const update = async ({ id, ...cup }: CupSchemaUpdateType) => {
 
   return await prisma.cup.update({ where: { id }, data: cup })
 }
-const cupServices = { create, findAll, delete: remove, findUnique, update }
+const cupServices = {
+  create,
+  findAll,
+  delete: remove,
+  findUnique,
+  update,
+  findInStock,
+}
 export default cupServices
