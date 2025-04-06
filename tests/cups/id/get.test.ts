@@ -17,15 +17,15 @@ beforeAll(async () => {
   token = access_token
 
   await orchestrator.setUserAdmin()
-  const { access_token: access_token_adimin } = await apiClient.authAdmin()
-  tokenAdmin = access_token_adimin
+  const { access_token: access_token_admin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_admin
 
   await orchestrator.cleanCups()
   cups = await orchestrator.setCups()
 })
 
 describe('GET /cups:id', () => {
-  describe('Anonymouns user', () => {
+  describe('Anonymous user', () => {
     test('getting cup', async () => {
       const response = await apiClient.get('/cups/id')
 
@@ -59,7 +59,7 @@ describe('GET /cups:id', () => {
     })
   })
 
-  describe('Unauthoriized User', () => {
+  describe('Unauthorized User', () => {
     test('getting new cup without delete:cups rule', async () => {
       const response = await apiClient.get('/cups/id', {
         token,
@@ -68,10 +68,10 @@ describe('GET /cups:id', () => {
 
       expect(response.status).toBe(401)
 
-      const bory = await response.json()
+      const body = await response.json()
 
-      expect(bory).toEqual({
-        action: 'Verifique se usuário tem rulle "read:cups".',
+      expect(body).toEqual({
+        action: 'Verifique se usuário tem rule "read:cups".',
         message: 'Usuário não autorizado.',
         name: 'UnauthorizedError',
         statusCode: 401,
@@ -88,11 +88,11 @@ describe('GET /cups:id', () => {
 
       expect(response.status).toBe(200)
 
-      const bory = (await response.json()) as { id: string }
+      const body = (await response.json()) as { id: string }
 
-      expect(bory).toEqual({
+      expect(body).toEqual({
         size: 300,
-        id: bory.id,
+        id: body.id,
         in_stock: true,
         price: 10,
         description: 'Tem copo',
@@ -110,7 +110,7 @@ describe('GET /cups:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique a propiedade "id".',
+        action: 'Verifique a propriedade "id".',
         message: 'Copo não existe.',
         name: 'NotFoundError',
         statusCode: 404,

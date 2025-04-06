@@ -13,7 +13,7 @@ async function login(phone: string, password: string) {
       name: true,
       phone: true,
       id: true,
-      rulles: true,
+      rules: true,
       is_admin: true,
     },
   })
@@ -36,7 +36,7 @@ async function login(phone: string, password: string) {
     {
       name: user.name,
       phone: user.phone,
-      rulles: user.rulles as UserType['rulles'],
+      rules: user.rules as UserType['rules'],
       is_admin: user.is_admin,
     },
     process.env.SECRET!,

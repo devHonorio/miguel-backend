@@ -10,11 +10,11 @@ const write = async (req: Request, res: Response, next: NextFunction) => {
       action: 'Verifique o token.',
     })
 
-  const { rulles } = user
+  const { rules: rules } = user
 
-  if (!rulles.includes('write:cups'))
+  if (!rules.includes('write:cups'))
     throw new UnauthorizedError({
-      action: 'Verifique se usuário tem rulle "write:cups".',
+      action: 'Verifique se usuário tem rule "write:cups".',
       message: 'Usuário não autorizado.',
     })
 
@@ -30,11 +30,11 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
       action: 'Verifique o token.',
     })
 
-  const { rulles } = user
+  const { rules } = user
 
-  if (!rulles.includes('delete:cups'))
+  if (!rules.includes('delete:cups'))
     throw new UnauthorizedError({
-      action: 'Verifique se usuário tem rulle "delete:cups".',
+      action: 'Verifique se usuário tem rule "delete:cups".',
       message: 'Usuário não autorizado.',
     })
 
@@ -50,11 +50,11 @@ const read = async (req: Request, res: Response, next: NextFunction) => {
       action: 'Verifique o token.',
     })
 
-  const { rulles } = user
+  const { rules } = user
 
-  if (!rulles.includes('read:cups'))
+  if (!rules.includes('read:cups'))
     throw new UnauthorizedError({
-      action: 'Verifique se usuário tem rulle "read:cups".',
+      action: 'Verifique se usuário tem rule "read:cups".',
       message: 'Usuário não autorizado.',
     })
 

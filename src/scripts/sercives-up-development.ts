@@ -5,7 +5,7 @@ import { exec } from 'node:child_process'
 dotenv.expand(config({ path: '.env.development' }))
 
 if (process.env.VERCEL_TARGET_ENV === 'development') {
-  console.log(`\nAmbintende is ${process.env.VERCEL_TARGET_ENV}`)
+  console.log(`\nAmbiente é ${process.env.VERCEL_TARGET_ENV}`)
 
   console.log('Levantando serviços')
 

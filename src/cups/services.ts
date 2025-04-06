@@ -8,7 +8,7 @@ const create = async (cup: CupType) => {
   if (cupExists)
     throw new BadRequestError({
       message: 'Copo já está cadastrado.',
-      action: 'Verifique se a propiedade "size"',
+      action: 'Verifique se a propriedade "size"',
     })
 
   const cupResponse = await prisma.cup.create({
@@ -29,7 +29,7 @@ const remove = async (size: number) => {
 
   if (!cupExists)
     throw new BadRequestError({
-      action: 'Verifique a propiedade "size"',
+      action: 'Verifique a propriedade "size"',
       message: 'Copo não existe.',
     })
 
@@ -43,7 +43,7 @@ const findUnique = async (id: string) => {
 
   if (!cup)
     throw new NotFoundError({
-      action: 'Verifique a propiedade "id".',
+      action: 'Verifique a propriedade "id".',
       message: 'Copo não existe.',
     })
 
@@ -56,7 +56,7 @@ const update = async ({ id, ...cup }: CupSchemaUpdateType) => {
   if (!cupExists)
     throw new NotFoundError({
       message: 'Copo não existe.',
-      action: 'Verifique a propiedade "id".',
+      action: 'Verifique a propriedade "id".',
     })
 
   return await prisma.cup.update({ where: { id }, data: cup })

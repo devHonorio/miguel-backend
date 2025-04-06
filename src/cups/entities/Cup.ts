@@ -28,7 +28,7 @@ function create(cup: CupType) {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }
@@ -46,7 +46,7 @@ const remove = (size: number) => {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }
@@ -66,7 +66,7 @@ const update = (cup: CupSchemaUpdateType) => {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }

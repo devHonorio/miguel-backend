@@ -3,9 +3,9 @@ import Cup from './entities/Cup'
 import cupServices from './services'
 
 const create: RequestHandler = async (req, res) => {
-  const cupBory = Cup.create(req.body)
+  const cupBody = Cup.create(req.body)
 
-  const cup = await cupServices.create(cupBory)
+  const cup = await cupServices.create(cupBody)
 
   res.status(201).json(cup)
 }
@@ -32,9 +32,9 @@ const findUnique: RequestHandler = async (req, res) => {
 }
 
 const update: RequestHandler = async (req, res) => {
-  const cupBory = Cup.update({ id: req.params.id, ...req.body })
+  const cupBody = Cup.update({ id: req.params.id, ...req.body })
 
-  const cup = await cupServices.update(cupBory)
+  const cup = await cupServices.update(cupBody)
 
   res.json(cup)
 }
