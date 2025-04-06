@@ -14,7 +14,7 @@ function removePhoneStr(phone: string) {
   return phone.replace(/[^0-9]/g, '')
 }
 
-function haveNameAndLastname(fullname: string) {
+function haveNameAndLastName(fullname: string) {
   return fullname.includes(' ')
 }
 
@@ -37,7 +37,7 @@ const userSchema = z.object({
   name: z
     .string()
     .transform((name) => User.removeUnwantedCharactersOfName(name))
-    .refine((name) => User.haveNameAndLastname(name), {
+    .refine((name) => User.haveNameAndLastName(name), {
       message: 'Digite seu nome completo.',
     })
     .refine((name) => User.validationLengthName(name), {
@@ -52,7 +52,7 @@ const userSchema = z.object({
       message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
     }),
   password: z.string(),
-  rulles: z.array(
+  rules: z.array(
     z.enum([
       'read:users',
       'write:users',
@@ -68,21 +68,21 @@ export type UserType = z.infer<typeof userSchema>
 
 function create(user: UserType) {
   try {
-    const { name, password, phone, rulles, id } = userSchema.parse(user)
+    const { name, password, phone, rules, id } = userSchema.parse(user)
 
     return {
       id,
       name,
       phone,
       password,
-      rulles,
+      rules,
     }
   } catch (error) {
     const err = error as ZodError
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}"`,
+      action: `Verifique se a propriedade "${err.issues[0].path}"`,
       cause: error,
     })
   }
@@ -90,7 +90,7 @@ function create(user: UserType) {
 
 const User = {
   removeUnwantedCharactersOfName,
-  haveNameAndLastname,
+  haveNameAndLastName: haveNameAndLastName,
   validationLengthName,
   removePhoneStr,
   phoneValidator,

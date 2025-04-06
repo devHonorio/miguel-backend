@@ -8,7 +8,7 @@ async function cleanUsers() {
 }
 
 async function setUserAdmin() {
-  const rulles: UserType['rulles'] = [
+  const rules: UserType['rules'] = [
     'write:users',
     'write:cups',
     'delete:cups',
@@ -19,20 +19,20 @@ async function setUserAdmin() {
       name: 'josé honorio',
       password: await hash('0000', SALT_OR_ROUNDS),
       phone: '00000000000',
-      rulles: rulles,
+      rules,
       is_admin: true,
     },
   })
 }
 
 async function setUser() {
-  const rulles: UserType['rulles'] = []
+  const rules: UserType['rules'] = []
   await prisma.user.create({
     data: {
       name: 'josé honorio',
       password: await hash('1111', SALT_OR_ROUNDS),
       phone: '11111111111',
-      rulles: rulles,
+      rules,
     },
   })
 }

@@ -12,8 +12,8 @@ beforeAll(async () => {
 })
 
 describe('GET /cups', () => {
-  describe('Anonymouns user', () => {
-    test('retryven cups', async () => {
+  describe('Anonymous user', () => {
+    test('retrieve all cups', async () => {
       const response = await apiClient.get('/cups')
 
       expect(response.status).toBe(200)

@@ -17,16 +17,16 @@ beforeAll(async () => {
   token = access_token
 
   await orchestrator.setUserAdmin()
-  const { access_token: access_token_adimin } = await apiClient.authAdmin()
-  tokenAdmin = access_token_adimin
+  const { access_token: access_token_admin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_admin
 
   await orchestrator.cleanCups()
   cups = await orchestrator.setCups()
 })
 
 describe('PATCH /cups/:id', () => {
-  describe('Anonymouns user', () => {
-    test('updatting cup', async () => {
+  describe('Anonymous user', () => {
+    test('updating cup', async () => {
       const response = await apiClient.patch('/cups/id', {})
 
       expect(response.status).toBe(401)
@@ -41,7 +41,7 @@ describe('PATCH /cups/:id', () => {
       })
     })
 
-    test('updatting cup type token invalid', async () => {
+    test('updating cup type token invalid', async () => {
       const cup = {
         size: 300,
       }
@@ -63,8 +63,8 @@ describe('PATCH /cups/:id', () => {
     })
   })
 
-  describe('Unauthoriized User', () => {
-    test('updatting new cup without write:cups rule', async () => {
+  describe('Unauthorized User', () => {
+    test('updating new cup without write:cups rule', async () => {
       const response = await apiClient.patch(
         '/cups/id',
         {},
@@ -76,9 +76,9 @@ describe('PATCH /cups/:id', () => {
 
       expect(response.status).toBe(401)
 
-      const bory = await response.json()
-      expect(bory).toEqual({
-        action: 'Verifique se usuário tem rulle "write:cups".',
+      const body = await response.json()
+      expect(body).toEqual({
+        action: 'Verifique se usuário tem rule "write:cups".',
         message: 'Usuário não autorizado.',
         name: 'UnauthorizedError',
         statusCode: 401,
@@ -93,7 +93,7 @@ describe('PATCH /cups/:id', () => {
       in_stock: true,
       description: '44',
     }
-    test('updatting cup', async () => {
+    test('updating cup', async () => {
       const response = await apiClient.patch(`/cups/${cups[0].id}`, cup, {
         type: 'Bearer',
         token: tokenAdmin,
@@ -104,7 +104,7 @@ describe('PATCH /cups/:id', () => {
       expect(body).toEqual({ ...cup, id: body.id })
     })
 
-    test('updatting cup with type size string', async () => {
+    test('updating cup with type size string', async () => {
       const cupSizeInvalid = {
         size: 'jj',
       }
@@ -123,14 +123,14 @@ describe('PATCH /cups/:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "size" está correta.',
+        action: 'Verifique se a propriedade "size" está correta.',
         message: 'Tamanho do copo deve ser um numero inteiro.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('updatting cup with type price string', async () => {
+    test('updating cup with type price string', async () => {
       const cupSizeInvalid = {
         size: 300,
         price: 'jj',
@@ -150,14 +150,14 @@ describe('PATCH /cups/:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "price" está correta.',
+        action: 'Verifique se a propriedade "price" está correta.',
         message: 'Tamanho do copo deve ser um numero.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('updatting cup with type in_stock not boolean', async () => {
+    test('updating cup with type in_stock not boolean', async () => {
       const cupSizeInvalid = {
         size: 100,
         price: 10.5,
@@ -178,14 +178,14 @@ describe('PATCH /cups/:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "in_stock" está correta.',
+        action: 'Verifique se a propriedade "in_stock" está correta.',
         message: 'Em estoque deve ser verdadeiro ou falso.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('updatting cup with descrption length +301', async () => {
+    test('updating cup with description length +301', async () => {
       const cup = {
         size: 25,
         price: 10,
@@ -202,14 +202,14 @@ describe('PATCH /cups/:id', () => {
 
       const body = await response.json()
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "description" está correta.',
+        action: 'Verifique se a propriedade "description" está correta.',
         message: 'Digite até 300 caracteres.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('updatting cup with number float', async () => {
+    test('updating cup with number float', async () => {
       const user = { size: 2.5 }
       const response = await apiClient.patch(`/cups/${cups[0].id}`, user, {
         token: tokenAdmin,
@@ -220,14 +220,14 @@ describe('PATCH /cups/:id', () => {
 
       const body = await response.json()
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "size" está correta.',
+        action: 'Verifique se a propriedade "size" está correta.',
         message: 'Tamanho do copo deve ser um numero inteiro.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('updatting exists cup', async () => {
+    test('updating exists cup', async () => {
       const cup = {
         size: 25,
         price: 10,
@@ -244,7 +244,7 @@ describe('PATCH /cups/:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique a propiedade "id".',
+        action: 'Verifique a propriedade "id".',
         message: 'Copo não existe.',
         name: 'NotFoundError',
         statusCode: 404,
