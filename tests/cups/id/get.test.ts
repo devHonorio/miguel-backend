@@ -86,6 +86,7 @@ describe('GET /cups:id', () => {
         in_stock: true,
         price: 10,
         description: 'Tem copo',
+        quantity_additional: 3,
       })
     })
 

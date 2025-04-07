@@ -57,6 +57,18 @@ const findUnique = async (id: string) => {
   return cup
 }
 
+const findUniqueInStock = async (id: string) => {
+  const cup = await prisma.cup.findUnique({ where: { id, in_stock: true } })
+
+  if (!cup)
+    throw new NotFoundError({
+      action: 'Verifique a propriedade "id".',
+      message: 'Copo não existe.',
+    })
+
+  return cup
+}
+
 const update = async ({ id, ...cup }: CupSchemaUpdateType) => {
   const cupExists = await prisma.cup.findUnique({ where: { id } })
 
@@ -75,5 +87,6 @@ const cupServices = {
   findUnique,
   update,
   findInStock,
+  findUniqueInStock,
 }
 export default cupServices
