@@ -4,7 +4,6 @@ import orchestrator from '../../orchestrator'
 
 const apiClient = CreateApiClient()
 
-let token: string
 let tokenAdmin: string
 
 let cups: Cup[]
@@ -13,8 +12,6 @@ beforeAll(async () => {
   await orchestrator.cleanUsers()
 
   await orchestrator.setUser()
-  const { access_token } = await apiClient.auth()
-  token = access_token
 
   await orchestrator.setUserAdmin()
   const { access_token: access_token_admin } = await apiClient.authAdmin()
@@ -26,18 +23,31 @@ beforeAll(async () => {
 
 describe('GET /cups:id', () => {
   describe('Anonymous user', () => {
-    test('getting cup', async () => {
-      const response = await apiClient.get('/cups/id')
+    test('getting cup in stock', async () => {
+      const response = await apiClient.get(`/cups/${cups[0].id}`)
 
-      expect(response.status).toBe(401)
+      expect(response.status).toBe(200)
 
-      const body = await response.json()
+      const body = (await response.json()) as { id: string }
 
       expect(body).toEqual({
-        action: 'Verifique se o token foi setado.',
-        message: 'Usuário não autorizado.',
-        name: 'UnauthorizedError',
-        statusCode: 401,
+        ...cups[0],
+        id: body.id,
+      })
+    })
+
+    test('getting cup not stock', async () => {
+      const response = await apiClient.get(`/cups/${cups[3].id}`)
+
+      expect(response.status).toBe(404)
+
+      const body = (await response.json()) as { id: string }
+
+      expect(body).toEqual({
+        action: 'Verifique a propriedade "id".',
+        message: 'Copo não existe.',
+        name: 'NotFoundError',
+        statusCode: 404,
       })
     })
 
@@ -52,26 +62,6 @@ describe('GET /cups:id', () => {
 
       expect(body).toEqual({
         action: 'Verifique o se o tipo do token é "Bearer"',
-        message: 'Usuário não autorizado.',
-        name: 'UnauthorizedError',
-        statusCode: 401,
-      })
-    })
-  })
-
-  describe('Unauthorized User', () => {
-    test('getting new cup without delete:cups rule', async () => {
-      const response = await apiClient.get('/cups/id', {
-        token,
-        type: 'Bearer',
-      })
-
-      expect(response.status).toBe(401)
-
-      const body = await response.json()
-
-      expect(body).toEqual({
-        action: 'Verifique se usuário tem rule "read:cups".',
         message: 'Usuário não autorizado.',
         name: 'UnauthorizedError',
         statusCode: 401,
