@@ -4,6 +4,8 @@ import authController from './auth/controller'
 import UserAuthMiddlewares from './auth/middleware'
 import cupsController from './cups/controller'
 import cupsMiddlewares from './cups/middleware'
+import additionalController from './additional/controller'
+import additionalMiddleware from './additional/middleware'
 
 export const routes = Router()
 
@@ -35,16 +37,19 @@ routes.delete(
   cupsController.remove,
 )
 
-routes.get(
-  '/cups/:id',
-  UserAuthMiddlewares.authMiddleware,
-  cupsMiddlewares.read,
-  cupsController.findUnique,
-)
+routes.get('/cups/:id', cupsMiddlewares.auth, cupsController.findUnique)
 
 routes.patch(
   '/cups/:id',
   UserAuthMiddlewares.authMiddleware,
   cupsMiddlewares.write,
   cupsController.update,
+)
+
+// additional
+routes.post(
+  '/additional',
+  UserAuthMiddlewares.authMiddleware,
+  additionalMiddleware.write,
+  additionalController.create,
 )

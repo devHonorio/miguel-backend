@@ -59,6 +59,7 @@ const userSchema = z.object({
       'write:cups',
       'delete:cups',
       'read:cups',
+      'write:additional',
     ]),
   ),
   is_admin: z.boolean().optional(),

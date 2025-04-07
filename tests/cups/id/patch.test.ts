@@ -92,6 +92,7 @@ describe('PATCH /cups/:id', () => {
       price: 50,
       in_stock: true,
       description: '44',
+      quantity_additional: 3,
     }
     test('updating cup', async () => {
       const response = await apiClient.patch(`/cups/${cups[0].id}`, cup, {
@@ -233,6 +234,7 @@ describe('PATCH /cups/:id', () => {
         price: 10,
         in_stock: true,
         description: '',
+        quantity_additional: 0,
       }
       const response = await apiClient.patch(`/cups/id`, cup, {
         token: tokenAdmin,

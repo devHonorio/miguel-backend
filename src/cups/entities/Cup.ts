@@ -14,6 +14,7 @@ const cupSchema = z.object({
     invalid_type_error: 'Em estoque deve ser verdadeiro ou falso.',
   }),
   description: z.string().max(300, 'Digite até 300 caracteres.'),
+  quantity_additional: z.number(),
 })
 
 export type CupType = z.infer<typeof cupSchema>

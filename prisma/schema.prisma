@@ -19,11 +19,20 @@ model User {
 }
 
 model Cup {
-  id          String  @id @default(uuid())
-  size        Int     @unique
-  price       Float
-  in_stock    Boolean @default(true)
-  description String
+  id                  String  @id @default(uuid())
+  size                Int     @unique
+  price               Float
+  in_stock            Boolean @default(true)
+  description         String
+  quantity_additional Int
 
   @@map("cups")
+}
+
+model Additional {
+  id    String @id @default(uuid())
+  name  String
+  price Float
+
+  @@map("additional")
 }

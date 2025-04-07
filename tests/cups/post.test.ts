@@ -19,7 +19,7 @@ beforeAll(async () => {
   tokenAdmin = access_token_admin
 })
 
-describe('POST /cups', () => {
+describe.only('POST /cups', () => {
   describe('Anonymous user', () => {
     test('creating cup', async () => {
       const cup = {
@@ -89,6 +89,7 @@ describe('POST /cups', () => {
       price: 16,
       in_stock: true,
       description: 'Escolha até 3 acompanhamentos',
+      quantity_additional: 3,
     }
     test('creating cup', async () => {
       const response = await apiClient.post('/cups', cup, {
@@ -213,7 +214,13 @@ describe('POST /cups', () => {
     })
 
     test('creating exists cup', async () => {
-      const cup = { size: 300, price: 10, in_stock: true, description: '' }
+      const cup = {
+        size: 300,
+        price: 10,
+        in_stock: true,
+        description: '',
+        quantity_additional: 3,
+      }
       const response = await apiClient.post('/cups', cup, {
         token: tokenAdmin,
         type: 'Bearer',

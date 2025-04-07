@@ -33,7 +33,13 @@ const remove: RequestHandler = async (req, res) => {
 const findUnique: RequestHandler = async (req, res) => {
   const { id } = req.params
 
-  const cup = await cupServices.findUnique(id)
+  if (req.user?.is_admin) {
+    const cup = await cupServices.findUnique(id)
+    res.json(cup)
+    return
+  }
+
+  const cup = await cupServices.findUniqueInStock(id)
 
   res.json(cup)
 }
