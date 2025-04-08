@@ -59,3 +59,9 @@ routes.get(
   additionalMiddleware.read,
   additionalController.findAll,
 )
+
+routes.get(
+  '/additional/:id',
+  additionalMiddleware.read,
+  additionalController.findUnique,
+)

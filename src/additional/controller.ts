@@ -22,6 +22,19 @@ const findAll: RequestHandler = async (req, res) => {
   res.json(additional)
 }
 
-const additionalController = { create, findAll }
+const findUnique: RequestHandler = async (req, res) => {
+  const id = req.params.id
+
+  if (req.user?.is_admin) {
+    const additional = await additionalServices.findUnique(id)
+    res.json(additional)
+    return
+  }
+
+  const additional = await additionalServices.findUniqueInStock(id)
+
+  res.json(additional)
+}
+const additionalController = { create, findAll, findUnique }
 
 export default additionalController
