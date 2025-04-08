@@ -53,3 +53,9 @@ routes.post(
   additionalMiddleware.write,
   additionalController.create,
 )
+
+routes.get(
+  '/additional',
+  additionalMiddleware.read,
+  additionalController.findAll,
+)

@@ -30,9 +30,10 @@ model Cup {
 }
 
 model Additional {
-  id    String @id @default(uuid())
-  name  String
-  price Float
+  id       String  @id @default(uuid())
+  name     String
+  price    Float
+  in_stock Boolean @default(true)
 
   @@map("additional")
 }

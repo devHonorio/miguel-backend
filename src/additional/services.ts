@@ -7,6 +7,18 @@ const create = async (data: AdditionalType) => {
   return additional
 }
 
-const additionalServices = { create }
+const findAll = async () => {
+  return await prisma.additional.findMany({
+    orderBy: { name: 'asc' },
+  })
+}
+
+const findInStock = async () => {
+  return await prisma.additional.findMany({
+    orderBy: { name: 'asc' },
+    where: { in_stock: true },
+  })
+}
+const additionalServices = { create, findAll, findInStock }
 
 export default additionalServices
