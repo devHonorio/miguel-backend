@@ -35,6 +35,14 @@ const findUnique: RequestHandler = async (req, res) => {
 
   res.json(additional)
 }
-const additionalController = { create, findAll, findUnique }
+
+const update: RequestHandler = async (req, res) => {
+  const additionalBody = Additional.update({ id: req.params.id, ...req.body })
+
+  const additional = await additionalServices.update(additionalBody)
+
+  res.json(additional)
+}
+const additionalController = { create, findAll, findUnique, update }
 
 export default additionalController

@@ -1,6 +1,6 @@
 import { prisma } from '../../prisma/prisma-client'
 import { NotFoundError } from '../errors/error-base'
-import { AdditionalType } from './entities/Additional'
+import { AdditionalType, UpdateAdditionalType } from './entities/Additional'
 
 const create = async (data: AdditionalType) => {
   const additional = await prisma.additional.create({ data })
@@ -46,12 +46,24 @@ const findUniqueInStock = async (id: string) => {
 
   return additional
 }
+
+const update = async ({ id, ...data }: UpdateAdditionalType) => {
+  const additional = await prisma.additional.findUnique({ where: { id } })
+
+  if (!additional)
+    throw new NotFoundError({
+      action: 'Verifique a propriedade "id".',
+      message: 'Adicional não existe.',
+    })
+  return await prisma.additional.update({ where: { id }, data })
+}
 const additionalServices = {
   create,
   findAll,
   findInStock,
   findUnique,
   findUniqueInStock,
+  update,
 }
 
 export default additionalServices

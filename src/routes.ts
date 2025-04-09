@@ -65,3 +65,10 @@ routes.get(
   additionalMiddleware.read,
   additionalController.findUnique,
 )
+
+routes.patch(
+  '/additional/:id',
+  UserAuthMiddlewares.authMiddleware,
+  additionalMiddleware.write,
+  additionalController.update,
+)
