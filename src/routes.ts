@@ -72,3 +72,10 @@ routes.patch(
   additionalMiddleware.write,
   additionalController.update,
 )
+
+routes.delete(
+  '/additional/:id',
+  UserAuthMiddlewares.authMiddleware,
+  additionalMiddleware.delete,
+  additionalController.delete,
+)

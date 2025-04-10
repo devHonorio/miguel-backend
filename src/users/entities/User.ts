@@ -31,6 +31,17 @@ function validationLengthName(fullname: string) {
 function removeUnwantedCharactersOfName(fullname: string) {
   return fullname.replace(/[^a-zA-Z\sçãẽĩõũâêîôûéóáíú]/g, '').trim()
 }
+const rules = z.enum([
+  'read:users',
+  'write:users',
+  'write:cups',
+  'delete:cups',
+  'read:cups',
+  'write:additional',
+  'delete:additional',
+])
+
+export type RulesEnum = z.infer<typeof rules>
 
 const userSchema = z.object({
   id: z.string().optional(),
@@ -52,16 +63,7 @@ const userSchema = z.object({
       message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
     }),
   password: z.string(),
-  rules: z.array(
-    z.enum([
-      'read:users',
-      'write:users',
-      'write:cups',
-      'delete:cups',
-      'read:cups',
-      'write:additional',
-    ]),
-  ),
+  rules: z.array(rules),
   is_admin: z.boolean().optional(),
 })
 

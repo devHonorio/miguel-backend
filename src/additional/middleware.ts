@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { InternalServerError, UnauthorizedError } from '../errors/error-base'
 import jwt from 'jsonwebtoken'
+import { RulesEnum, UserType } from '../users/entities/User'
 
-const write = async (req: Request, res: Response, next: NextFunction) => {
-  const user = req.user
-
+const getRules = (user?: Omit<UserType, 'password'>) => {
   if (!user)
     throw new UnauthorizedError({
       message: 'Usuário não encontrado.',
@@ -13,11 +12,24 @@ const write = async (req: Request, res: Response, next: NextFunction) => {
 
   const { rules: rules } = user
 
-  if (!rules.includes('write:additional'))
+  return rules
+}
+
+const validatePermission = (
+  rules: UserType['rules'],
+  ruleRequire: RulesEnum,
+) => {
+  if (!rules.includes(ruleRequire))
     throw new UnauthorizedError({
-      action: 'Verifique se usuário tem rule "write:additional".',
+      action: `Verifique se usuário tem rule "${ruleRequire}".`,
       message: 'Usuário não autorizado.',
     })
+}
+
+const write = async (req: Request, res: Response, next: NextFunction) => {
+  const rules = getRules(req.user)
+
+  validatePermission(rules, 'write:additional')
 
   next()
 }
@@ -54,6 +66,14 @@ const read = async (req: Request, res: Response, next: NextFunction) => {
 
   next()
 }
-const additionalMiddleware = { write, read }
+
+const remove = async (req: Request, res: Response, next: NextFunction) => {
+  const rules = getRules(req.user)
+
+  validatePermission(rules, 'delete:additional')
+
+  next()
+}
+const additionalMiddleware = { write, read, delete: remove }
 
 export default additionalMiddleware

@@ -14,6 +14,7 @@ async function setUserAdmin() {
     'delete:cups',
     'read:cups',
     'write:additional',
+    'delete:additional',
   ]
   await prisma.user.create({
     data: {

@@ -43,6 +43,19 @@ const update: RequestHandler = async (req, res) => {
 
   res.json(additional)
 }
-const additionalController = { create, findAll, findUnique, update }
+
+const remove: RequestHandler = async (req, res) => {
+  const additional = await additionalServices.delete(req.params.id)
+
+  res.json(additional)
+}
+
+const additionalController = {
+  create,
+  findAll,
+  findUnique,
+  update,
+  delete: remove,
+}
 
 export default additionalController

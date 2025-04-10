@@ -57,6 +57,19 @@ const update = async ({ id, ...data }: UpdateAdditionalType) => {
     })
   return await prisma.additional.update({ where: { id }, data })
 }
+
+const remove = async (id: string) => {
+  const additional = await prisma.additional.findUnique({ where: { id } })
+
+  if (!additional)
+    throw new NotFoundError({
+      action: 'Verifique a propriedade "id".',
+      message: 'Adicional não existe.',
+    })
+
+  return await prisma.additional.delete({ where: { id } })
+}
+
 const additionalServices = {
   create,
   findAll,
@@ -64,6 +77,7 @@ const additionalServices = {
   findUnique,
   findUniqueInStock,
   update,
+  delete: remove,
 }
 
 export default additionalServices
