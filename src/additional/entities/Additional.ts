@@ -8,9 +8,14 @@ export const additionalSchema = z.object({
     .max(25, 'Digite até 25 caracteres.'),
   price: z
     .number({
-      errorMap: () => ({ message: 'Adicional deve ser um numero.' }),
+      errorMap: () => ({ message: 'Preço deve ser um numero.' }),
     })
     .min(0, 'Preço deve ser um numero positivo.'),
+  in_stock: z
+    .boolean({
+      errorMap: () => ({ message: 'Em estoque deve ser verdadeiro ou falso.' }),
+    })
+    .optional(),
 })
 
 export type AdditionalType = z.infer<typeof additionalSchema>
@@ -31,6 +36,26 @@ const create = (data: AdditionalType) => {
   }
 }
 
-const Additional = { create }
+export const updateAdditionalSchema = additionalSchema.extend({
+  id: z.string(),
+})
+
+export type UpdateAdditionalType = z.infer<typeof updateAdditionalSchema>
+
+const update = (data: UpdateAdditionalType) => {
+  try {
+    return updateAdditionalSchema.parse(data)
+  } catch (error) {
+    const err = error as ZodError
+
+    throw new BadRequestError({
+      message: err.issues[0].message,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
+      cause: error,
+    })
+  }
+}
+
+const Additional = { create, update }
 
 export default Additional

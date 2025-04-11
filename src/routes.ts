@@ -53,3 +53,29 @@ routes.post(
   additionalMiddleware.write,
   additionalController.create,
 )
+
+routes.get(
+  '/additional',
+  additionalMiddleware.read,
+  additionalController.findAll,
+)
+
+routes.get(
+  '/additional/:id',
+  additionalMiddleware.read,
+  additionalController.findUnique,
+)
+
+routes.patch(
+  '/additional/:id',
+  UserAuthMiddlewares.authMiddleware,
+  additionalMiddleware.write,
+  additionalController.update,
+)
+
+routes.delete(
+  '/additional/:id',
+  UserAuthMiddlewares.authMiddleware,
+  additionalMiddleware.delete,
+  additionalController.delete,
+)

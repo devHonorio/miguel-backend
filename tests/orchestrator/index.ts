@@ -14,6 +14,7 @@ async function setUserAdmin() {
     'delete:cups',
     'read:cups',
     'write:additional',
+    'delete:additional',
   ]
   await prisma.user.create({
     data: {
@@ -79,6 +80,27 @@ async function setCups() {
   return cups
 }
 
-const orchestrator = { cleanUsers, setUserAdmin, setUser, cleanCups, setCups }
+const setAdditional = async () => {
+  return await prisma.additional.createManyAndReturn({
+    data: [
+      { name: 'morango', price: 2 },
+      { name: 'nutella', price: 2 },
+      { name: 'ovomaltine', price: 0, in_stock: false },
+    ],
+  })
+}
+
+const cleanAdditional = async () => {
+  await prisma.additional.deleteMany()
+}
+const orchestrator = {
+  cleanUsers,
+  setUserAdmin,
+  setUser,
+  cleanCups,
+  setCups,
+  setAdditional,
+  cleanAdditional,
+}
 
 export default orchestrator
