@@ -29,13 +29,14 @@ async function setUserAdmin() {
 
 async function setUser() {
   const rules: UserType['rules'] = []
-  await prisma.user.create({
+  return await prisma.user.create({
     data: {
       name: 'josé honorio',
       password: await hash('1111', SALT_OR_ROUNDS),
       phone: '11111111111',
       rules,
     },
+    select: { id: true },
   })
 }
 
