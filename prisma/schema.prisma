@@ -40,12 +40,14 @@ model Additional {
 }
 
 model Address {
-  id         String  @id @default(uuid())
-  street     String
-  number     Int
-  district   String
-  complement String?
-  users      User[]
+  id               String  @id @default(uuid())
+  street           String
+  number           Int
+  district         String
+  complement       String?
+  city             String
+  address_complete String
+  users            User[]
 
   @@map("addresses")
 }

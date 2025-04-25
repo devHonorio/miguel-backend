@@ -45,6 +45,8 @@ describe('POST /address', () => {
       number: 538,
       district: 'Água Verde',
       complement: 'Perto do Colégio Nereu.',
+      city: 'Ampére',
+      address_complete: '',
     }
 
     // street
@@ -310,6 +312,9 @@ describe('POST /address', () => {
         number: address.number,
         district: address.district.toLocaleLowerCase(),
         complement: address.complement?.toLocaleLowerCase(),
+        city: address.city.toLocaleLowerCase(),
+        address_complete:
+          `${address.street} - ${address.number}, ${address.district}, ${address.city}, ${address.complement}`.toLocaleLowerCase(),
       })
     })
 
@@ -333,6 +338,9 @@ describe('POST /address', () => {
         number: address.number,
         district: address.district.toLocaleLowerCase(),
         complement: address.complement?.toLocaleLowerCase(),
+        city: address.city.toLocaleLowerCase(),
+        address_complete:
+          `${address.street} - ${address.number}, ${address.district}, ${address.city}, ${address.complement}`.toLocaleLowerCase(),
         user_id: body.user_id,
       })
     })

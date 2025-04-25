@@ -25,12 +25,24 @@ const userSchema = z.object({
       if (!street) return
       return street.toLocaleLowerCase()
     }),
+  city: z
+    .string({ errorMap: () => ({ message: 'Cidade é obrigatório.' }) })
+    .max(200, 'Cidade deve ter menos de 200 letras.')
+    .min(3, 'Cidade deve ter pelo menos 3 letras.')
+    .transform((street) => street.toLocaleLowerCase()),
   user_id: z.string().optional(),
+  address_complete: z.string().transform(() => {}),
 })
 
 const create = (data: unknown) => {
   try {
-    return userSchema.parse(data)
+    const userSchemaWithAddressComplete = userSchema.transform((data) => ({
+      ...data,
+      address_complete:
+        `${data.street} - ${data.number}, ${data.district}, ${data.city}, ${data.complement}`.toLocaleLowerCase(),
+    }))
+
+    return userSchemaWithAddressComplete.parse(data)
   } catch (error) {
     const err = error as ZodError
 
