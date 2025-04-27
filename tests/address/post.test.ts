@@ -297,10 +297,14 @@ describe('POST /address', () => {
 
     // address
     test('creating address.', async () => {
-      const response = await api.post('/address', address, {
-        token,
-        type: 'Bearer',
-      })
+      const response = await api.post(
+        '/address',
+        { ...address, address_complete: undefined },
+        {
+          token,
+          type: 'Bearer',
+        },
+      )
 
       expect(response.status).toBe(201)
 

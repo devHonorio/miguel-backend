@@ -31,7 +31,7 @@ const userSchema = z.object({
     .min(3, 'Cidade deve ter pelo menos 3 letras.')
     .transform((street) => street.toLocaleLowerCase()),
   user_id: z.string().optional(),
-  address_complete: z.string().transform(() => {}),
+  address_complete: z.string().optional(),
 })
 
 const create = (data: unknown) => {
