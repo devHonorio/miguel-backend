@@ -93,3 +93,9 @@ routes.get(
   UserAuthMiddlewares.authMiddleware,
   addressController.search,
 )
+
+routes.get(
+  '/address/user',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.listAddressOfUser,
+)

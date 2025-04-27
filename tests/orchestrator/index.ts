@@ -123,6 +123,44 @@ const setAddresses = async () => {
     ],
   })
 }
+
+const setAddressesWithUser = async (user_id: string) => {
+  await prisma.address.createManyAndReturn({
+    data: [
+      {
+        street: 'rua josé',
+        number: 548,
+        district: 'água verde',
+        complement: 'perto do colégio caetano.',
+        city: 'ampére',
+        address_complete:
+          'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+      },
+      {
+        street: 'rua papa joão paulo ii',
+        number: 538,
+        district: 'água verde',
+        complement: 'perto do colégio nereu.',
+        city: 'ampére',
+        address_complete:
+          'rua papa joão paulo ii - 538, água verde, ampére, perto do colégio nereu.',
+      },
+    ],
+  })
+  return await prisma.address.create({
+    data: {
+      users: { connect: { id: user_id } },
+      street: 'rua vanusa',
+      number: 581,
+      district: 'água verde',
+      complement: 'perto do colégio cecília.',
+      city: 'ampére',
+      address_complete:
+        'rua vanusa - 581, água verde, ampére, perto do colégio cecília.',
+    },
+    select: { address_complete: true, id: true },
+  })
+}
 const orchestrator = {
   cleanUsers,
   setUserAdmin,
@@ -133,6 +171,7 @@ const orchestrator = {
   cleanAdditional,
   cleanAddresses,
   setAddresses,
+  setAddressesWithUser,
 }
 
 export default orchestrator

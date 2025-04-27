@@ -18,6 +18,11 @@ const search: RequestHandler = async (req, res) => {
   res.json(addresses)
 }
 
-const addressController = { create, search }
+const listAddressOfUser: RequestHandler = async (req, res) => {
+  const address = await addressServices.listAddressOfUser(req.user!.id!)
+  res.json(address)
+}
+
+const addressController = { create, search, listAddressOfUser }
 
 export default addressController

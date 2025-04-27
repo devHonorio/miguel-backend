@@ -35,6 +35,15 @@ const search = async (query: string) => {
     where: { address_complete: { contains: query, mode: 'insensitive' } },
   })
 }
-const addressServices = { create, search }
+
+const listAddressOfUser = async (user_id: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: user_id },
+    select: { addresses: { select: { address_complete: true, id: true } } },
+  })
+
+  return user?.addresses.map((address) => address)
+}
+const addressServices = { create, search, listAddressOfUser }
 
 export default addressServices
