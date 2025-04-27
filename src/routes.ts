@@ -87,3 +87,9 @@ routes.post(
   UserAuthMiddlewares.authMiddleware,
   addressController.create,
 )
+
+routes.get(
+  '/address/search/:query',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.search,
+)

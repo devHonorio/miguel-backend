@@ -4,7 +4,12 @@ import { prisma } from '../../prisma/prisma-client'
 interface CreateAddress
   extends Pick<
     Prisma.AddressCreateInput,
-    'street' | 'number' | 'district' | 'complement'
+    | 'street'
+    | 'number'
+    | 'district'
+    | 'complement'
+    | 'city'
+    | 'address_complete'
   > {
   user_id?: string
 }
@@ -21,6 +26,15 @@ const create = async ({ user_id, ...data }: CreateAddress) => {
   return await prisma.address.create({ data })
 }
 
-const addressServices = { create }
+const search = async (query: string) => {
+  return prisma.address.findMany({
+    orderBy: { address_complete: 'asc' },
+    take: 10,
+    select: { id: true, address_complete: true, complement: true },
+
+    where: { address_complete: { contains: query, mode: 'insensitive' } },
+  })
+}
+const addressServices = { create, search }
 
 export default addressServices

@@ -10,6 +10,14 @@ const create: RequestHandler = async (req, res) => {
   res.status(201).json(address)
 }
 
-const addressController = { create }
+const search: RequestHandler = async (req, res) => {
+  const query = req.params.query
+
+  const addresses = await addressServices.search(query)
+
+  res.json(addresses)
+}
+
+const addressController = { create, search }
 
 export default addressController
