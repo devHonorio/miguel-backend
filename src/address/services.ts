@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { prisma } from '../../prisma/prisma-client'
+import { BadRequestError, NotFoundError } from '../errors/error-base'
 
 interface CreateAddress
   extends Pick<
@@ -44,6 +45,36 @@ const listAddressOfUser = async (user_id: string) => {
 
   return user?.addresses.map((address) => address)
 }
-const addressServices = { create, search, listAddressOfUser }
+
+const remove = async (id: string, user_id?: string) => {
+  if (!user_id)
+    throw new BadRequestError({
+      action: 'Deslogue e logue a conta novamente.',
+      message: 'id do usuário não encontrado.',
+    })
+
+  const existsUser = await prisma.user.findUnique({ where: { id: user_id } })
+
+  if (!existsUser) throw new NotFoundError({})
+
+  const existsAddress = await prisma.address.findUnique({ where: { id } })
+
+  if (!existsAddress)
+    throw new NotFoundError({
+      action: 'Verifique o id do endereço.',
+      message: 'Endereço não encontrado para ser excluído.',
+    })
+
+  return await prisma.address.update({
+    where: { id },
+    data: { users: { disconnect: { id: user_id } } },
+    select: {
+      id: true,
+      address_complete: true,
+    },
+  })
+}
+
+const addressServices = { create, search, listAddressOfUser, delete: remove }
 
 export default addressServices

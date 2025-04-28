@@ -99,3 +99,9 @@ routes.get(
   UserAuthMiddlewares.authMiddleware,
   addressController.listAddressOfUser,
 )
+
+routes.delete(
+  '/address/user/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.delete,
+)

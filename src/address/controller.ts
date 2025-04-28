@@ -26,6 +26,11 @@ const listAddressOfUser: RequestHandler = async (req, res) => {
   res.json(address)
 }
 
-const addressController = { create, search, listAddressOfUser }
+const remove: RequestHandler = async (req, res) => {
+  const address = await addressServices.delete(req.params.id, req.user?.id)
+  res.json(address)
+}
+
+const addressController = { create, search, listAddressOfUser, delete: remove }
 
 export default addressController
