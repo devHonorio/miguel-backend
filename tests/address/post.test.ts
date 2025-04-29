@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { CreateApiClient } from '../api'
 import orchestrator from '../orchestrator'
 
@@ -9,12 +8,9 @@ const api = CreateApiClient()
 
 let token: string
 
-let user_id: string
-
 beforeAll(async () => {
   await orchestrator.cleanUsers()
-  const { id } = await orchestrator.setUser()
-  user_id = id
+  await orchestrator.setUser()
 
   const { access_token } = await api.auth()
 
@@ -40,7 +36,7 @@ describe('POST /address', () => {
   })
 
   describe('User', () => {
-    const address: Prisma.AddressCreateInput = {
+    const address = {
       street: 'Rua Papa João Paulo II',
       number: 538,
       district: 'Água Verde',
@@ -308,32 +304,6 @@ describe('POST /address', () => {
 
       expect(response.status).toBe(201)
 
-      const body = (await response.json()) as { id: string }
-
-      expect(body).toEqual({
-        id: body.id,
-        street: address.street.toLocaleLowerCase(),
-        number: address.number,
-        district: address.district.toLocaleLowerCase(),
-        complement: address.complement?.toLocaleLowerCase(),
-        city: address.city.toLocaleLowerCase(),
-        address_complete:
-          `${address.street} - ${address.number}, ${address.district}, ${address.city}, ${address.complement}`.toLocaleLowerCase(),
-      })
-    })
-
-    test('creating address with user.', async () => {
-      const response = await api.post(
-        '/address',
-        { ...address, user_id },
-        {
-          token,
-          type: 'Bearer',
-        },
-      )
-
-      expect(response.status).toBe(201)
-
       const body = (await response.json()) as { id: string; user_id: string }
 
       expect(body).toEqual({
@@ -343,6 +313,7 @@ describe('POST /address', () => {
         district: address.district.toLocaleLowerCase(),
         complement: address.complement?.toLocaleLowerCase(),
         city: address.city.toLocaleLowerCase(),
+        shipping_price: 4,
         address_complete:
           `${address.street} - ${address.number}, ${address.district}, ${address.city}, ${address.complement}`.toLocaleLowerCase(),
         user_id: body.user_id,

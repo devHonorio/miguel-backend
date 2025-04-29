@@ -110,6 +110,7 @@ const setAddresses = async () => {
         city: 'ampére',
         address_complete:
           'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+        shipping_price: 4,
       },
       {
         street: 'rua papa joão paulo ii',
@@ -119,6 +120,7 @@ const setAddresses = async () => {
         city: 'ampére',
         address_complete:
           'rua papa joão paulo ii - 538, água verde, ampére, perto do colégio nereu.',
+        shipping_price: 4,
       },
     ],
   })
@@ -135,6 +137,7 @@ const setAddressesWithUser = async (user_id: string) => {
         city: 'ampére',
         address_complete:
           'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+        shipping_price: 4,
       },
       {
         street: 'rua papa joão paulo ii',
@@ -144,6 +147,7 @@ const setAddressesWithUser = async (user_id: string) => {
         city: 'ampére',
         address_complete:
           'rua papa joão paulo ii - 538, água verde, ampére, perto do colégio nereu.',
+        shipping_price: 10,
       },
     ],
   })
@@ -157,8 +161,9 @@ const setAddressesWithUser = async (user_id: string) => {
       city: 'ampére',
       address_complete:
         'rua vanusa - 581, água verde, ampére, perto do colégio cecília.',
+      shipping_price: 4,
     },
-    select: { address_complete: true, id: true },
+    select: { address_complete: true, id: true, shipping_price: true },
   })
 }
 const orchestrator = {

@@ -22,13 +22,13 @@ interface CreateAddress
 const create = async ({ user_id, ...data }: CreateAddress) => {
   if (user_id) {
     const address = await prisma.address.create({
-      data: { ...data, users: { connect: { id: user_id } } },
+      data: { ...data, shipping_price: 4, users: { connect: { id: user_id } } },
     })
 
     return { ...address, user_id: user_id }
   }
 
-  return await prisma.address.create({ data })
+  return await prisma.address.create({ data: { ...data, shipping_price: 4 } })
 }
 
 const search = async (query: string) => {
@@ -44,7 +44,11 @@ const search = async (query: string) => {
 const listAddressOfUser = async (user_id: string) => {
   const user = await prisma.user.findUnique({
     where: { id: user_id },
-    select: { addresses: { select: { address_complete: true, id: true } } },
+    select: {
+      addresses: {
+        select: { address_complete: true, id: true, shipping_price: true },
+      },
+    },
   })
 
   return user?.addresses.map((address) => address)

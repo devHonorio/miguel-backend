@@ -48,6 +48,7 @@ model Address {
   city             String
   address_complete String
   users            User[]
+  shipping_price   Float
 
   @@map("addresses")
 }
