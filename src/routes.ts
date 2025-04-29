@@ -105,3 +105,9 @@ routes.delete(
   UserAuthMiddlewares.authMiddleware,
   addressController.delete,
 )
+
+routes.post(
+  '/address/user/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.setAddress,
+)

@@ -31,6 +31,17 @@ const remove: RequestHandler = async (req, res) => {
   res.json(address)
 }
 
-const addressController = { create, search, listAddressOfUser, delete: remove }
+const setAddress: RequestHandler = async (req, res) => {
+  const address = await addressServices.set(req.params.id, req.user?.id)
+  res.json(address)
+}
+
+const addressController = {
+  create,
+  search,
+  listAddressOfUser,
+  delete: remove,
+  setAddress,
+}
 
 export default addressController
