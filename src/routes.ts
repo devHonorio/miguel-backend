@@ -6,6 +6,7 @@ import cupsController from './cups/controller'
 import cupsMiddlewares from './cups/middleware'
 import additionalController from './additional/controller'
 import additionalMiddleware from './additional/middleware'
+import addressController from './address/controller'
 
 export const routes = Router()
 
@@ -78,4 +79,41 @@ routes.delete(
   UserAuthMiddlewares.authMiddleware,
   additionalMiddleware.delete,
   additionalController.delete,
+)
+
+// address
+routes.post(
+  '/address',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.create,
+)
+
+routes.get(
+  '/address/search/:query',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.search,
+)
+
+routes.get(
+  '/address/user',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.listAddressOfUser,
+)
+
+routes.delete(
+  '/address/user/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.delete,
+)
+
+routes.post(
+  '/address/user/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.setAddress,
+)
+
+routes.get(
+  '/address/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.findUnique,
 )

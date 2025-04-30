@@ -29,13 +29,14 @@ async function setUserAdmin() {
 
 async function setUser() {
   const rules: UserType['rules'] = []
-  await prisma.user.create({
+  return await prisma.user.create({
     data: {
       name: 'josé honorio',
       password: await hash('1111', SALT_OR_ROUNDS),
       phone: '11111111111',
       rules,
     },
+    select: { id: true },
   })
 }
 
@@ -93,6 +94,78 @@ const setAdditional = async () => {
 const cleanAdditional = async () => {
   await prisma.additional.deleteMany()
 }
+
+const cleanAddresses = async () => {
+  await prisma.address.deleteMany()
+}
+
+const setAddresses = async () => {
+  return await prisma.address.createManyAndReturn({
+    data: [
+      {
+        street: 'rua josé',
+        number: 548,
+        district: 'água verde',
+        complement: 'perto do colégio caetano.',
+        city: 'ampére',
+        address_complete:
+          'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+        shipping_price: 4,
+      },
+      {
+        street: 'rua papa joão paulo ii',
+        number: 538,
+        district: 'água verde',
+        complement: 'perto do colégio nereu.',
+        city: 'ampére',
+        address_complete:
+          'rua papa joão paulo ii - 538, água verde, ampére, perto do colégio nereu.',
+        shipping_price: 4,
+      },
+    ],
+  })
+}
+
+const setAddressesWithUser = async (user_id: string) => {
+  await prisma.address.createManyAndReturn({
+    data: [
+      {
+        street: 'rua josé',
+        number: 548,
+        district: 'água verde',
+        complement: 'perto do colégio caetano.',
+        city: 'ampére',
+        address_complete:
+          'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+        shipping_price: 4,
+      },
+      {
+        street: 'rua papa joão paulo ii',
+        number: 538,
+        district: 'água verde',
+        complement: 'perto do colégio nereu.',
+        city: 'ampére',
+        address_complete:
+          'rua papa joão paulo ii - 538, água verde, ampére, perto do colégio nereu.',
+        shipping_price: 10,
+      },
+    ],
+  })
+  return await prisma.address.create({
+    data: {
+      users: { connect: { id: user_id } },
+      street: 'rua vanusa',
+      number: 581,
+      district: 'água verde',
+      complement: 'perto do colégio cecília.',
+      city: 'ampére',
+      address_complete:
+        'rua vanusa - 581, água verde, ampére, perto do colégio cecília.',
+      shipping_price: 4,
+    },
+    select: { address_complete: true, id: true, shipping_price: true },
+  })
+}
 const orchestrator = {
   cleanUsers,
   setUserAdmin,
@@ -101,6 +174,9 @@ const orchestrator = {
   setCups,
   setAdditional,
   cleanAdditional,
+  cleanAddresses,
+  setAddresses,
+  setAddressesWithUser,
 }
 
 export default orchestrator

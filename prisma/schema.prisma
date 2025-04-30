@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  phone    String   @unique
-  password String
-  rules    String[]
-  is_admin Boolean  @default(false)
+  id        String    @id @default(uuid())
+  name      String
+  phone     String    @unique
+  password  String
+  rules     String[]
+  is_admin  Boolean   @default(false)
+  addresses Address[]
 
   @@map("users")
 }
@@ -36,4 +37,18 @@ model Additional {
   in_stock Boolean @default(true)
 
   @@map("additional")
+}
+
+model Address {
+  id               String  @id @default(uuid())
+  street           String
+  number           Int
+  district         String
+  complement       String?
+  city             String
+  address_complete String
+  users            User[]
+  shipping_price   Float
+
+  @@map("addresses")
 }
