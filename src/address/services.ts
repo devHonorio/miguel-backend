@@ -113,12 +113,20 @@ const set = async (id: string, user_id?: string) => {
   })
 }
 
+const findUnique = async (id: string) => {
+  return await prisma.address.findUnique({
+    where: { id },
+    select: { address_complete: true, id: true, shipping_price: true },
+  })
+}
+
 const addressServices = {
   create,
   search,
   listAddressOfUser,
   delete: remove,
   set,
+  findUnique,
 }
 
 export default addressServices

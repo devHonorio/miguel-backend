@@ -111,3 +111,9 @@ routes.post(
   UserAuthMiddlewares.authMiddleware,
   addressController.setAddress,
 )
+
+routes.get(
+  '/address/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressController.findUnique,
+)

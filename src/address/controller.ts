@@ -36,12 +36,18 @@ const setAddress: RequestHandler = async (req, res) => {
   res.json(address)
 }
 
+const findUnique: RequestHandler = async (req, res) => {
+  const address = await addressServices.findUnique(req.params.id)
+  res.json(address)
+}
+
 const addressController = {
   create,
   search,
   listAddressOfUser,
   delete: remove,
   setAddress,
+  findUnique,
 }
 
 export default addressController
