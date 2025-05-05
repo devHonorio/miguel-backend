@@ -15,26 +15,29 @@ model User {
   rules     String[]
   is_admin  Boolean   @default(false)
   addresses Address[]
+  orders    Order[]
 
   @@map("users")
 }
 
 model Cup {
-  id                  String  @id @default(uuid())
-  size                Int     @unique
+  id                  String      @id @default(uuid())
+  size                Int         @unique
   price               Float
-  in_stock            Boolean @default(true)
+  in_stock            Boolean     @default(true)
   description         String
   quantity_additional Int
+  order_item          OrderItem[]
 
   @@map("cups")
 }
 
 model Additional {
-  id       String  @id @default(uuid())
-  name     String
-  price    Float
-  in_stock Boolean @default(true)
+  id          String      @id @default(uuid())
+  name        String
+  price       Float
+  in_stock    Boolean     @default(true)
+  order_items OrderItem[]
 
   @@map("additional")
 }
@@ -49,6 +52,33 @@ model Address {
   address_complete String
   users            User[]
   shipping_price   Float
+  order            Order[]
 
   @@map("addresses")
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  user         User        @relation(fields: [user_id], references: [id])
+  user_id      String
+  address      Address?    @relation(fields: [address_id], references: [id])
+  address_id   String?
+  order_items  OrderItem[]
+  observations String?
+  discount     Float
+  total_price  Float
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String       @id @default(uuid())
+  cup        Cup          @relation(fields: [cup_id], references: [id])
+  cup_id     String
+  additional Additional[]
+  price      Float
+  order      Order        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id   String
+
+  @@map("order items")
 }

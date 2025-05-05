@@ -86,6 +86,11 @@ const setAdditional = async () => {
     data: [
       { name: 'morango', price: 2 },
       { name: 'nutella', price: 2 },
+      { name: 'ninho', price: 0 },
+      { name: 'banana', price: 0 },
+      { name: 'amendoim', price: 0 },
+      { name: 'paçoca', price: 0 },
+      { name: 'amêndoas', price: 0 },
       { name: 'ovomaltine', price: 0, in_stock: false },
     ],
   })
@@ -166,6 +171,10 @@ const setAddressesWithUser = async (user_id: string) => {
     select: { address_complete: true, id: true, shipping_price: true },
   })
 }
+
+const cleanOrders = async () => {
+  await prisma.order.deleteMany()
+}
 const orchestrator = {
   cleanUsers,
   setUserAdmin,
@@ -177,6 +186,7 @@ const orchestrator = {
   cleanAddresses,
   setAddresses,
   setAddressesWithUser,
+  cleanOrders,
 }
 
 export default orchestrator
