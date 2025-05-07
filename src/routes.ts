@@ -7,6 +7,7 @@ import cupsMiddlewares from './cups/middleware'
 import additionalController from './additional/controller'
 import additionalMiddleware from './additional/middleware'
 import addressController from './address/controller'
+import orderController from './order/controller'
 
 export const routes = Router()
 
@@ -116,4 +117,11 @@ routes.get(
   '/address/:id',
   UserAuthMiddlewares.authMiddleware,
   addressController.findUnique,
+)
+
+// order
+routes.post(
+  '/order',
+  UserAuthMiddlewares.authMiddleware,
+  orderController.create,
 )
