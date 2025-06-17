@@ -11,10 +11,7 @@ let additional: Additional[]
 let addresses: Address[]
 
 beforeAll(async () => {
-  await orchestrator.cleanOrders()
-  await orchestrator.cleanCups()
-  await orchestrator.cleanUsers()
-  await orchestrator.cleanAdditional()
+  await orchestrator.cleanDb()
 
   additional = await orchestrator.setAdditional()
 

@@ -9,8 +9,7 @@ let cups: Cup[]
 let adminAccessToken: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
-  await orchestrator.cleanCups()
+  await orchestrator.cleanDb()
   cups = await orchestrator.setCups()
 
   await orchestrator.setUserAdmin()

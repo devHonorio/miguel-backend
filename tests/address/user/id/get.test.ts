@@ -6,8 +6,7 @@ const api = CreateApiClient()
 let token: string
 let address: { address_complete: string; id: string }
 beforeAll(async () => {
-  await orchestrator.cleanAddresses()
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
 
   await orchestrator.setAddresses()
 

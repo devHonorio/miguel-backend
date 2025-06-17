@@ -7,7 +7,7 @@ let tokenAdmin: string
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   await orchestrator.setUserAdmin()
   await orchestrator.setUser()
 
@@ -17,7 +17,6 @@ beforeAll(async () => {
   const { access_token } = await apiClient.auth()
   token = access_token
 
-  await orchestrator.cleanCups()
   await orchestrator.setCups()
 })
 

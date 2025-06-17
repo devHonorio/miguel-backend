@@ -3,7 +3,7 @@ import { CreateApiClient } from '../api'
 import orchestrator from '../orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   await orchestrator.setUserAdmin()
   await orchestrator.setUser()
 })

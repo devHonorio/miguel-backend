@@ -10,7 +10,7 @@ let tokenAdmin: string
 let cups: Cup[]
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
 
   await orchestrator.setUser()
   const { access_token } = await apiClient.auth()
@@ -20,7 +20,6 @@ beforeAll(async () => {
   const { access_token: access_token_admin } = await apiClient.authAdmin()
   tokenAdmin = access_token_admin
 
-  await orchestrator.cleanCups()
   cups = await orchestrator.setCups()
 })
 
