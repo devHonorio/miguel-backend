@@ -9,9 +9,9 @@ let additional: Additional[]
 let adminAccessToken: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
-  await orchestrator.cleanAdditional()
+  await orchestrator.cleanDb()
   additional = await orchestrator.setAdditional()
+  additional.sort((a, b) => a.name.localeCompare(b.name))
 
   await orchestrator.setUserAdmin()
   const { access_token } = await apiClient.authAdmin()

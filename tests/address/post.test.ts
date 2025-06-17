@@ -9,7 +9,7 @@ const api = CreateApiClient()
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   await orchestrator.setUser()
 
   const { access_token } = await api.auth()

@@ -9,7 +9,7 @@ let tokenAdmin: string
 let additional: Additional[]
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
 
   await orchestrator.setUser()
 
@@ -17,7 +17,6 @@ beforeAll(async () => {
   const { access_token: access_token_admin } = await apiClient.authAdmin()
   tokenAdmin = access_token_admin
 
-  await orchestrator.cleanAdditional()
   additional = await orchestrator.setAdditional()
 })
 
@@ -37,7 +36,7 @@ describe('GET /additional:id', () => {
     })
 
     test('getting additional not stock', async () => {
-      const response = await apiClient.get(`/additional/${additional[2].id}`)
+      const response = await apiClient.get(`/additional/${additional[7].id}`)
 
       expect(response.status).toBe(404)
 

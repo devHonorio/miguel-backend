@@ -8,7 +8,7 @@ let tokenAdmin: string
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
 
   await orchestrator.setUser()
   const { access_token } = await apiClient.auth()
@@ -84,6 +84,7 @@ describe('POST /additional', () => {
     const additional: Prisma.AdditionalCreateInput = {
       name: 'morango',
       price: 2,
+      in_stock: true,
     }
     test('creating additional', async () => {
       const response = await apiClient.post('/additional', additional, {
@@ -143,7 +144,7 @@ describe('POST /additional', () => {
 
       expect(body).toEqual({
         action: 'Verifique se a propriedade "price" está correta.',
-        message: 'Adicional deve ser um numero.',
+        message: 'Preço deve ser um numero.',
         name: 'BadRequestError',
         statusCode: 400,
       })

@@ -7,8 +7,7 @@ let tokenAdmin: string
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
-  await orchestrator.cleanCups()
+  await orchestrator.cleanDb()
 
   await orchestrator.setUser()
   const { access_token } = await apiClient.auth()
@@ -19,7 +18,7 @@ beforeAll(async () => {
   tokenAdmin = access_token_admin
 })
 
-describe.only('POST /cups', () => {
+describe('POST /cups', () => {
   describe('Anonymous user', () => {
     test('creating cup', async () => {
       const cup = {

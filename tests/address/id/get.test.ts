@@ -7,8 +7,7 @@ let token: string
 let address: { id: string; address_complete: string; shipping_price: number }
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
-  await orchestrator.cleanAddresses()
+  await orchestrator.cleanDb()
 
   const { id } = await orchestrator.setUser()
 

@@ -8,6 +8,8 @@ let addresses: Address[]
 let token: string
 
 beforeAll(async () => {
+  await orchestrator.cleanDb()
+  await orchestrator.setUser()
   addresses = await orchestrator.setAddresses()
   const { access_token } = await api.auth()
   token = access_token

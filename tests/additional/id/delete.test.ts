@@ -10,10 +10,9 @@ let token: string
 let additional: Additional[]
 
 beforeAll(async () => {
-  await orchestrator.cleanAdditional()
+  await orchestrator.cleanDb()
   additional = await orchestrator.setAdditional()
 
-  await orchestrator.cleanUsers()
   await orchestrator.setUserAdmin()
   await orchestrator.setUser()
 

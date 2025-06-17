@@ -8,7 +8,7 @@ let token: string
 let addressId: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   const { id } = await orchestrator.setUser()
 
   const { access_token } = await api.auth()

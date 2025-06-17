@@ -2,6 +2,10 @@ import { prisma } from '../../prisma/prisma-client'
 import { NotFoundError } from '../errors/error-base'
 import { AdditionalType, UpdateAdditionalType } from './entities/Additional'
 
+const sortAdditional = (additional: AdditionalType[]) => {
+  return additional.sort((a, b) => a.name.localeCompare(b.name))
+}
+
 const create = async (data: AdditionalType) => {
   const additional = await prisma.additional.create({ data })
 
@@ -9,16 +13,18 @@ const create = async (data: AdditionalType) => {
 }
 
 const findAll = async () => {
-  return await prisma.additional.findMany({
+  const additional = await prisma.additional.findMany({
     orderBy: { name: 'asc' },
   })
+  return sortAdditional(additional)
 }
 
 const findInStock = async () => {
-  return await prisma.additional.findMany({
+  const additional = await prisma.additional.findMany({
     orderBy: { name: 'asc' },
     where: { in_stock: true },
   })
+  return sortAdditional(additional)
 }
 
 const findUnique = async (id: string) => {

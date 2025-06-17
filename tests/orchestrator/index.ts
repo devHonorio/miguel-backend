@@ -175,6 +175,15 @@ const setAddressesWithUser = async (user_id: string) => {
 const cleanOrders = async () => {
   await prisma.order.deleteMany()
 }
+
+const cleanDb = async () => {
+  await prisma.orderItem.deleteMany()
+  await prisma.order.deleteMany()
+  await prisma.cup.deleteMany()
+  await prisma.additional.deleteMany()
+  await prisma.address.deleteMany()
+  await prisma.user.deleteMany()
+}
 const orchestrator = {
   cleanUsers,
   setUserAdmin,
@@ -187,6 +196,7 @@ const orchestrator = {
   setAddresses,
   setAddressesWithUser,
   cleanOrders,
+  cleanDb,
 }
 
 export default orchestrator
