@@ -1,9 +1,9 @@
 import { compare } from 'bcrypt'
 import { prisma } from '../../prisma/prisma-client'
 
-import jwt from 'jsonwebtoken'
 import { NotFoundError, UnauthorizedError } from '../errors/error-base'
 import { UserType } from '../users/entities/User'
+import Auth from './entities/Auth'
 
 async function login(phone: string, password: string) {
   const user = await prisma.user.findUnique({
@@ -32,16 +32,13 @@ async function login(phone: string, password: string) {
       message: 'Senha incorreta.',
     })
 
-  const access_token = jwt.sign(
-    {
-      name: user.name,
-      phone: user.phone,
-      rules: user.rules as UserType['rules'],
-      is_admin: user.is_admin,
-    },
-    process.env.SECRET!,
-    { subject: user.id, expiresIn: '500d' },
-  )
+  const access_token = Auth.generateToken({
+    id: user.id,
+    name: user.name,
+    phone: user.phone,
+    rules: user.rules as UserType['rules'],
+    is_admin: user.is_admin,
+  })
 
   return access_token
 }

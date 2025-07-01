@@ -1,4 +1,7 @@
+import jwt from 'jsonwebtoken'
+
 import { BadRequestError } from '../../errors/error-base'
+import { UserType } from '../../users/entities/User'
 
 interface SignInProps {
   phone: string
@@ -23,6 +26,26 @@ function signIn({ password, phone }: SignInProps) {
   }
 }
 
-const Auth = { signIn }
+const generateToken = ({
+  name,
+  phone,
+  rules,
+  id,
+  is_admin = false,
+}: Required<Omit<UserType, 'password'>>) => {
+  const access_token = jwt.sign(
+    {
+      name: name,
+      phone: phone,
+      rules: rules as UserType['rules'],
+      is_admin,
+    },
+    process.env.SECRET!,
+    { subject: id, expiresIn: '500d' },
+  )
+
+  return access_token
+}
+const Auth = { signIn, generateToken }
 
 export default Auth
