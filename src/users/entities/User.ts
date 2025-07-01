@@ -1,18 +1,10 @@
 import z, { ZodError } from 'zod'
 import { BadRequestError } from '../../errors/error-base'
+import { phoneSchema } from '../../entities/Phone'
 
 const UserPropertiesValues = {
-  PHONE_LENGTH: 11,
   LENGTH_FOR_NAME: 2,
 } as const
-
-function phoneValidator(phone: string) {
-  return User.removePhoneStr(phone).length === UserPropertiesValues.PHONE_LENGTH
-}
-
-function removePhoneStr(phone: string) {
-  return phone.replace(/[^0-9]/g, '')
-}
 
 function haveNameAndLastName(fullname: string) {
   return fullname.includes(' ')
@@ -43,7 +35,7 @@ const rules = z.enum([
 
 export type RulesEnum = z.infer<typeof rules>
 
-const userSchema = z.object({
+export const userSchema = z.object({
   id: z.string().optional(),
   name: z
     .string()
@@ -54,14 +46,7 @@ const userSchema = z.object({
     .refine((name) => User.validationLengthName(name), {
       message: 'Nome não deve ter abreviações.',
     }),
-  phone: z
-    .string({
-      required_error: 'Telefone é obrigatório.',
-    })
-    .transform((phone) => User.removePhoneStr(phone))
-    .refine((phone) => User.phoneValidator(phone), {
-      message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
-    }),
+  phone: phoneSchema,
   password: z.string(),
   rules: z.array(rules),
   is_admin: z.boolean().optional(),
@@ -95,8 +80,6 @@ const User = {
   removeUnwantedCharactersOfName,
   haveNameAndLastName: haveNameAndLastName,
   validationLengthName,
-  removePhoneStr,
-  phoneValidator,
   create,
 }
 
