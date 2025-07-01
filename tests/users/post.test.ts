@@ -37,7 +37,7 @@ describe('POST /users', () => {
 
       const { password, ...rest } = user
 
-      expect(body).toEqual(rest)
+      expect(body).toEqual({ ...rest, phone: `55${user.phone}` })
     })
 
     test('creating user with length phone invalid', async () => {
