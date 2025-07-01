@@ -8,6 +8,9 @@ import additionalController from './additional/controller'
 import additionalMiddleware from './additional/middleware'
 import addressController from './address/controller'
 import orderController from './order/controller'
+import sendCodeController from './send-code/controller'
+import verifyCodeController from './verify-code/controller'
+import signupController from './signup/controller'
 
 export const routes = Router()
 
@@ -125,3 +128,12 @@ routes.post(
   UserAuthMiddlewares.authMiddleware,
   orderController.create,
 )
+
+// send-code
+routes.post('/send-code', sendCodeController.send)
+
+// verify code
+routes.post('/verify-code', verifyCodeController.verify)
+
+// signup
+routes.post('/signup', signupController.signup)
