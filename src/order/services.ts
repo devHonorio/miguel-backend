@@ -81,7 +81,7 @@ const create = async ({
   const totalPrice =
     items.reduce((acc, { price }) => acc + price, 0) - discount + shipping_price
 
-  return await prisma.order.create({
+  const order = await prisma.order.create({
     data: {
       user_id: userId,
       total_price: totalPrice,
@@ -97,12 +97,35 @@ const create = async ({
       },
     },
     select: {
-      user_id: true,
-      id: true,
+      user: { select: { name: true, phone: true } },
       total_price: true,
-      order_items: { select: { price: true } },
+      order_items: {
+        select: {
+          price: true,
+          cup: { select: { size: true } },
+          additional: { select: { name: true } },
+        },
+      },
+      address: { select: { address_complete: true, shipping_price: true } },
     },
   })
+
+  return {
+    name: order.user.name,
+    phone: order.user.phone,
+    orderItems: order.order_items.map((item) => {
+      return {
+        size: item.cup.size,
+        additional: item.additional.map((additional) => additional.name),
+        price: item.price,
+      }
+    }),
+    totalPrice: order.total_price,
+    address: {
+      address: order.address?.address_complete,
+      shippingPrice: order.address?.shipping_price,
+    },
+  }
 }
 
 const orderServices = { create }
