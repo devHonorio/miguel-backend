@@ -1,6 +1,7 @@
 import { hash } from 'bcrypt'
 import { prisma } from '../../prisma/prisma-client'
 import { InternalServerError, NotFoundError } from '../errors/error-base'
+import Zap from '../entities/Zap'
 
 const send = async (phone: string) => {
   const user = await prisma.user.findUnique({ where: { phone } })
@@ -16,16 +17,8 @@ const send = async (phone: string) => {
     create: { phone, code: codeHash },
   })
 
-  const options = {
-    method: 'POST',
-    headers: { apikey: 'senha', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ number: phone, text: code }),
-  }
+  const response = await Zap.sendText(phone, code)
 
-  const response = await fetch(
-    `${process.env.EVOLUTION_SERVER_URL}/message/sendText/${process.env.EVOLUTION_INSTANCE}`,
-    options,
-  )
   if (!response.ok) throw new InternalServerError('Erro ná api do WhatsApp')
 
   setTimeout(
