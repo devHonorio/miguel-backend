@@ -9,6 +9,12 @@ const create: RequestHandler = async (req, res) => {
 
   res.status(201).json(user)
 }
-const usersController = { create }
+
+const search: RequestHandler = async (req, res) => {
+  const users = await userServices.search(req.params.query)
+
+  res.json(users)
+}
+const usersController = { create, search }
 
 export default usersController

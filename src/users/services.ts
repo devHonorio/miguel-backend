@@ -14,5 +14,19 @@ const create = async ({ name, password, phone, id, rules }: UserType) => {
   return user
 }
 
-const userServices = { create }
+const search = async (query: string) => {
+  return await prisma.user.findMany({
+    take: 10,
+    select: { id: true, name: true, phone: true },
+    where: {
+      OR: [
+        { phone: { contains: query, mode: 'insensitive' } },
+        { name: { contains: query, mode: 'insensitive' } },
+      ],
+    },
+    orderBy: { name: 'asc' },
+  })
+}
+
+const userServices = { create, search }
 export default userServices

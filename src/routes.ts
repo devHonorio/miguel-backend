@@ -11,6 +11,7 @@ import orderController from './order/controller'
 import sendCodeController from './send-code/controller'
 import verifyCodeController from './verify-code/controller'
 import signupController from './signup/controller'
+import usersMiddlewares from './users/entities/middleware'
 
 export const routes = Router()
 
@@ -23,6 +24,13 @@ routes.post(
   UserAuthMiddlewares.authMiddleware,
   UserAuthMiddlewares.authorizationMiddleware,
   usersController.create,
+)
+
+routes.get(
+  '/users/:query',
+  UserAuthMiddlewares.authMiddleware,
+  usersMiddlewares.read,
+  usersController.search,
 )
 
 // cups
