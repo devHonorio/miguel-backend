@@ -75,26 +75,33 @@ describe('POST /order', () => {
 
       const body = (await response.json()) as { id: string }
 
-      const orderItems = order.order_items.map(({ additional_ids, cup_id }) => {
-        const additionalPrice = additional_ids.reduce((acc, additionalId) => {
-          const priceAdditional =
-            additional.find(({ id }) => id === additionalId)?.price ?? 0
-
-          return acc + priceAdditional
-        }, 0)
-
-        const cupPrice = cups.find(({ id }) => id === cup_id)?.price ?? 0
-
-        return {
-          price: additionalPrice + cupPrice,
-        }
-      })
-
       expect(body).toEqual({
-        id: body.id,
-        user_id: userId,
-        order_items: orderItems,
-        total_price: orderItems.reduce((acc, { price }) => acc + price, 0),
+        name: 'josé honorio',
+        phone: '11111111111',
+        orderItems: [
+          {
+            size: 300,
+            additional: ['morango', 'nutella', 'ninho', 'banana'],
+            price: 14,
+          },
+          {
+            size: 400,
+            additional: ['morango', 'nutella', 'ninho', 'banana'],
+            price: 24,
+          },
+          {
+            size: 500,
+            additional: ['morango', 'nutella', 'ninho', 'banana'],
+            price: 34,
+          },
+          {
+            size: 600,
+            additional: ['morango', 'nutella', 'ninho', 'banana'],
+            price: 44,
+          },
+        ],
+        totalPrice: 116,
+        address: {},
       })
     })
 
@@ -119,18 +126,28 @@ describe('POST /order', () => {
 
       expect(response.status).toBe(201)
 
-      const body = (await response.json()) as { id: string; user_id: string }
+      const body = await response.json()
 
       expect(body).toEqual({
-        id: body.id,
-        order_items: [
+        name: 'josé honorio',
+        phone: '11111111111',
+        orderItems: [
           {
+            size: 300,
+            additional: [
+              'morango',
+              'nutella',
+              'ninho',
+              'banana',
+              'amendoim',
+              'paçoca',
+              'amêndoas',
+            ],
             price: 16,
           },
         ],
-        total_price: 16,
-
-        user_id: body.user_id,
+        totalPrice: 16,
+        address: {},
       })
     })
 
@@ -159,15 +176,29 @@ describe('POST /order', () => {
       const body = (await response.json()) as { id: string; user_id: string }
 
       expect(body).toEqual({
-        id: body.id,
-        order_items: [
+        name: 'josé honorio',
+        phone: '11111111111',
+        orderItems: [
           {
+            size: 300,
+            additional: [
+              'morango',
+              'nutella',
+              'ninho',
+              'banana',
+              'amendoim',
+              'paçoca',
+              'amêndoas',
+            ],
             price: 16,
           },
         ],
-        total_price: 20,
-
-        user_id: body.user_id,
+        totalPrice: 20,
+        address: {
+          address:
+            'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+          shippingPrice: 4,
+        },
       })
     })
 
@@ -197,15 +228,29 @@ describe('POST /order', () => {
       const body = (await response.json()) as { id: string; user_id: string }
 
       expect(body).toEqual({
-        id: body.id,
-        order_items: [
+        name: 'josé honorio',
+        phone: '11111111111',
+        orderItems: [
           {
+            size: 300,
+            additional: [
+              'morango',
+              'nutella',
+              'ninho',
+              'banana',
+              'amendoim',
+              'paçoca',
+              'amêndoas',
+            ],
             price: 16,
           },
         ],
-        total_price: 10,
-
-        user_id: body.user_id,
+        totalPrice: 10,
+        address: {
+          address:
+            'rua josé - 548, água verde, ampére, perto do colégio caetano.',
+          shippingPrice: 4,
+        },
       })
     })
 
