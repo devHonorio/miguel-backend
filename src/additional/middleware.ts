@@ -1,35 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { InternalServerError, UnauthorizedError } from '../errors/error-base'
 import jwt from 'jsonwebtoken'
-import { RulesEnum, UserType } from '../users/entities/User'
-
-const getRules = (user?: Omit<UserType, 'password'>) => {
-  if (!user)
-    throw new UnauthorizedError({
-      message: 'Usuário não encontrado.',
-      action: 'Verifique o token.',
-    })
-
-  const { rules: rules } = user
-
-  return rules
-}
-
-const validatePermission = (
-  rules: UserType['rules'],
-  ruleRequire: RulesEnum,
-) => {
-  if (!rules.includes(ruleRequire))
-    throw new UnauthorizedError({
-      action: `Verifique se usuário tem rule "${ruleRequire}".`,
-      message: 'Usuário não autorizado.',
-    })
-}
+import Auth from '../auth/entities/Auth'
 
 const write = async (req: Request, res: Response, next: NextFunction) => {
-  const rules = getRules(req.user)
-
-  validatePermission(rules, 'write:additional')
+  Auth.validatePermission({ user: req.user, ruleRequire: 'write:additional' })
 
   next()
 }
@@ -68,9 +43,7 @@ const read = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const remove = async (req: Request, res: Response, next: NextFunction) => {
-  const rules = getRules(req.user)
-
-  validatePermission(rules, 'delete:additional')
+  Auth.validatePermission({ user: req.user, ruleRequire: 'delete:additional' })
 
   next()
 }

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-import { BadRequestError } from '../../errors/error-base'
-import { UserType } from '../../users/entities/User'
+import { BadRequestError, UnauthorizedError } from '../../errors/error-base'
+import { RulesEnum, UserType } from '../../users/entities/User'
 
 interface SignInProps {
   phone: string
@@ -46,6 +46,32 @@ const generateToken = ({
 
   return access_token
 }
-const Auth = { signIn, generateToken }
+
+const getRules = (user?: Omit<UserType, 'password'>) => {
+  if (!user)
+    throw new UnauthorizedError({
+      message: 'Usuário não encontrado.',
+      action: 'Verifique o token.',
+    })
+
+  const { rules: rules } = user
+
+  return rules
+}
+
+interface ValidatePermission {
+  user?: Omit<UserType, 'password'>
+  ruleRequire: RulesEnum
+}
+const validatePermission = ({ ruleRequire, user }: ValidatePermission) => {
+  const rules = getRules(user)
+
+  if (!rules.includes(ruleRequire))
+    throw new UnauthorizedError({
+      action: `Verifique se usuário tem rule "${ruleRequire}".`,
+      message: 'Usuário não autorizado.',
+    })
+}
+const Auth = { signIn, generateToken, validatePermission }
 
 export default Auth
