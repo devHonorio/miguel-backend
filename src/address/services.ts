@@ -35,7 +35,12 @@ const search = async (query: string) => {
   return prisma.address.findMany({
     orderBy: { address_complete: 'asc' },
     take: 10,
-    select: { id: true, address_complete: true, complement: true },
+    select: {
+      id: true,
+      address_complete: true,
+      complement: true,
+      shipping_price: true,
+    },
 
     where: { address_complete: { contains: query, mode: 'insensitive' } },
   })
