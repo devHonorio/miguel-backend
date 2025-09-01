@@ -23,7 +23,7 @@ model User {
 model Cup {
   id                  String      @id @default(uuid())
   size                Int         @unique
-  price               Float
+  price               Int
   in_stock            Boolean     @default(true)
   description         String
   quantity_additional Int
@@ -35,7 +35,7 @@ model Cup {
 model Additional {
   id          String      @id @default(uuid())
   name        String
-  price       Float
+  price       Int
   in_stock    Boolean     @default(true)
   order_items OrderItem[]
 
@@ -51,22 +51,33 @@ model Address {
   city             String
   address_complete String
   users            User[]
-  shipping_price   Float
+  shipping_price   Int
   order            Order[]
 
   @@map("addresses")
 }
 
+enum OrderStatus {
+  rascunho
+  confirmar_pedido
+  anotado
+  cancelado
+}
+
 model Order {
-  id           String      @id @default(uuid())
-  user         User        @relation(fields: [user_id], references: [id])
-  user_id      String
-  address      Address?    @relation(fields: [address_id], references: [id])
-  address_id   String?
-  order_items  OrderItem[]
-  observations String?
-  discount     Float
-  total_price  Float
+  id             String      @id @default(uuid())
+  user           User        @relation(fields: [user_id], references: [id])
+  user_id        String
+  address        Address?    @relation(fields: [address_id], references: [id])
+  address_id     String?
+  order_items    OrderItem[]
+  observations   String?
+  discount       Int
+  total_price    Int
+  status         OrderStatus
+  shipping_price Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
 
   @@map("orders")
 }
@@ -76,7 +87,7 @@ model OrderItem {
   cup        Cup          @relation(fields: [cup_id], references: [id])
   cup_id     String
   additional Additional[]
-  price      Float
+  price      Int
   order      Order        @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id   String
 
@@ -84,8 +95,8 @@ model OrderItem {
 }
 
 model OneTimeCodes {
-  phone String @unique @id
-  code String
+  phone String @id @unique
+  code  String
 
   @@map("one time codes")
 }
