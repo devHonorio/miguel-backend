@@ -95,6 +95,8 @@ const create = async ({
           additional: { connect: additional_ids },
         })),
       },
+      status: 'confirmar_pedido',
+      shipping_price,
     },
     select: {
       user: { select: { name: true, phone: true } },
@@ -126,6 +128,26 @@ const create = async ({
       shippingPrice: order.address?.shipping_price,
     },
   }
+}
+
+export interface AdminOrderCreateType {
+  clientId: string
+  cups: Cup[]
+  observations?: string
+  addressId?: string
+  shippingPrice: number
+  totalPrice: number
+  discount: number
+}
+
+interface Cup {
+  id: string
+  additional: Additional[]
+  price: number
+}
+
+interface Additional {
+  id: string
 }
 
 const orderServices = { create }

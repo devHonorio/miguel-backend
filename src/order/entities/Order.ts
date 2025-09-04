@@ -91,7 +91,7 @@ const extractAdditionalTotalPrice = (
       return acc
     }
 
-    return acc + 2
+    return acc + 200
   }, 0)
 }
 
@@ -118,6 +118,59 @@ const createOrderItemsWithPrice = ({
   })
 }
 
-const Order = { createOrder, createOrderItemsWithPrice }
+const cups = z.object({
+  id: z.string({
+    errorMap: () => ({ message: 'Tamanho do copo é obrigatório.' }),
+  }),
+  additional: z.array(
+    z.object({
+      id: z.string({
+        errorMap: () => ({ message: 'Identificar o adicional é obrigatório' }),
+      }),
+    }),
+  ),
+  price: z.coerce.number({
+    errorMap: () => ({ message: 'Preço é obrigatório.' }),
+  }),
+})
+
+const schemaAdminOrderCreate = z.object({
+  clientId: z.string({
+    errorMap: () => ({ message: 'Cliente é obrigatório' }),
+  }),
+  cups: z.array(cups),
+  observations: z.string().optional(),
+  addressId: z
+    .string({
+      errorMap: () => ({ message: 'Endereço é obrigatório' }),
+    })
+    .transform((val) => (val === 'pick-up-local' ? undefined : val)),
+  shippingPrice: z.coerce
+    .number({
+      errorMap: () => ({ message: 'Preço é obrigatório.' }),
+    })
+    .min(0, 'Frete deve ser maior de R$ 1,00.')
+    .optional(),
+  discount: z.coerce.number().default(0),
+  totalPrice: z.coerce
+    .number({ errorMap: () => ({ message: 'Preço é obrigatório.' }) })
+    .min(1, 'Preço deve ser maior de R$ 0,01.'),
+})
+
+const adminOrderCreate = (data: unknown) => {
+  try {
+    return schemaAdminOrderCreate.parse(data)
+  } catch (error) {
+    const err = error as ZodError
+
+    throw new BadRequestError({
+      message: err.issues[0].message,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
+      cause: error,
+    })
+  }
+}
+
+const Order = { createOrder, createOrderItemsWithPrice, adminOrderCreate }
 
 export default Order
