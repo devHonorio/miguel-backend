@@ -31,6 +31,8 @@ const rules = z.enum([
   'read:cups',
   'write:additional',
   'delete:additional',
+  'read:orders',
+  'delete:orders',
 ])
 
 export type RulesEnum = z.infer<typeof rules>
