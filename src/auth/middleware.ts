@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { InternalServerError, UnauthorizedError } from '../errors/error-base'
-import { verify } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 const authMiddleware = async (
   req: Request,
@@ -24,14 +24,14 @@ const authMiddleware = async (
     })
 
   try {
-    const payload = verify(token, process.env.SECRET!)
+    const payload = jwt.verify(token, process.env.SECRET!)
 
     if (typeof payload === 'string')
       throw new InternalServerError('Payload não pode ser uma string.')
 
-    const { name, phone, sub: id, rulles } = payload
+    const { name, phone, sub: id, rules } = payload
 
-    req.user = { name, phone, id, rulles }
+    req.user = { name, phone, id, rules }
 
     return next()
   } catch (error) {
@@ -56,11 +56,11 @@ const authorizationMiddleware = async (
       action: 'Verifique o token.',
     })
 
-  const { rulles } = user
+  const { rules } = user
 
-  if (!rulles.includes('write:users'))
+  if (!rules.includes('write:users'))
     throw new UnauthorizedError({
-      action: 'Verifique se usuário tem rulle "write:users".',
+      action: 'Verifique se usuário tem rule "write:users".',
       message: 'Usuário não autorizado.',
     })
 

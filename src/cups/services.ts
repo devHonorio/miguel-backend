@@ -8,7 +8,7 @@ const create = async (cup: CupType) => {
   if (cupExists)
     throw new BadRequestError({
       message: 'Copo já está cadastrado.',
-      action: 'Verifique se a propiedade "size"',
+      action: 'Verifique se a propriedade "size"',
     })
 
   const cupResponse = await prisma.cup.create({
@@ -24,12 +24,19 @@ const findAll = async () => {
   })
 }
 
+const findInStock = async () => {
+  return await prisma.cup.findMany({
+    orderBy: { size: 'asc' },
+    where: { in_stock: true },
+  })
+}
+
 const remove = async (size: number) => {
   const cupExists = await prisma.cup.findUnique({ where: { size } })
 
   if (!cupExists)
     throw new BadRequestError({
-      action: 'Verifique a propiedade "size"',
+      action: 'Verifique a propriedade "size"',
       message: 'Copo não existe.',
     })
 
@@ -43,7 +50,19 @@ const findUnique = async (id: string) => {
 
   if (!cup)
     throw new NotFoundError({
-      action: 'Verifique a propiedade "id".',
+      action: 'Verifique a propriedade "id".',
+      message: 'Copo não existe.',
+    })
+
+  return cup
+}
+
+const findUniqueInStock = async (id: string) => {
+  const cup = await prisma.cup.findUnique({ where: { id, in_stock: true } })
+
+  if (!cup)
+    throw new NotFoundError({
+      action: 'Verifique a propriedade "id".',
       message: 'Copo não existe.',
     })
 
@@ -56,10 +75,18 @@ const update = async ({ id, ...cup }: CupSchemaUpdateType) => {
   if (!cupExists)
     throw new NotFoundError({
       message: 'Copo não existe.',
-      action: 'Verifique a propiedade "id".',
+      action: 'Verifique a propriedade "id".',
     })
 
   return await prisma.cup.update({ where: { id }, data: cup })
 }
-const cupServices = { create, findAll, delete: remove, findUnique, update }
+const cupServices = {
+  create,
+  findAll,
+  delete: remove,
+  findUnique,
+  update,
+  findInStock,
+  findUniqueInStock,
+}
 export default cupServices

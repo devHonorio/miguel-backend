@@ -8,22 +8,95 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  phone    String   @unique
-  password String
-  rulles   String[]
-  is_admin Boolean  @default(false)
+  id        String    @id @default(uuid())
+  name      String
+  phone     String    @unique
+  password  String
+  rules     String[]
+  is_admin  Boolean   @default(false)
+  addresses Address[]
+  orders    Order[]
 
   @@map("users")
 }
 
 model Cup {
-  id          String  @id @default(uuid())
-  size        Int     @unique
-  price       Float
-  in_stock    Boolean @default(true)
-  description String
+  id                  String      @id @default(uuid())
+  size                Int         @unique
+  price               Int
+  in_stock            Boolean     @default(true)
+  description         String
+  quantity_additional Int
+  order_item          OrderItem[]
 
   @@map("cups")
+}
+
+model Additional {
+  id          String      @id @default(uuid())
+  name        String
+  price       Int
+  in_stock    Boolean     @default(true)
+  order_items OrderItem[]
+
+  @@map("additional")
+}
+
+model Address {
+  id               String  @id @default(uuid())
+  street           String
+  number           Int
+  district         String
+  complement       String?
+  city             String
+  address_complete String
+  users            User[]
+  shipping_price   Int
+  order            Order[]
+
+  @@map("addresses")
+}
+
+enum OrderStatus {
+  rascunho
+  confirmar_pedido
+  anotado
+  cancelado
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  user           User        @relation(fields: [user_id], references: [id])
+  user_id        String
+  address        Address?    @relation(fields: [address_id], references: [id])
+  address_id     String?
+  order_items    OrderItem[]
+  observations   String?
+  discount       Int
+  total_price    Int
+  status         OrderStatus
+  shipping_price Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String       @id @default(uuid())
+  cup        Cup          @relation(fields: [cup_id], references: [id])
+  cup_id     String
+  additional Additional[]
+  price      Int
+  order      Order        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id   String
+
+  @@map("order items")
+}
+
+model OneTimeCodes {
+  phone String @id @unique
+  code  String
+
+  @@map("one time codes")
 }

@@ -4,40 +4,49 @@ import orchestrator from '../../orchestrator'
 
 const apiClient = CreateApiClient()
 
-let token: string
 let tokenAdmin: string
 
 let cups: Cup[]
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
 
   await orchestrator.setUser()
-  const { access_token } = await apiClient.auth()
-  token = access_token
 
   await orchestrator.setUserAdmin()
-  const { access_token: access_token_adimin } = await apiClient.authAdmin()
-  tokenAdmin = access_token_adimin
+  const { access_token: access_token_admin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_admin
 
-  await orchestrator.cleanCups()
   cups = await orchestrator.setCups()
 })
 
 describe('GET /cups:id', () => {
-  describe('Anonymouns user', () => {
-    test('getting cup', async () => {
-      const response = await apiClient.get('/cups/id')
+  describe('Anonymous user', () => {
+    test('getting cup in stock', async () => {
+      const response = await apiClient.get(`/cups/${cups[0].id}`)
 
-      expect(response.status).toBe(401)
+      expect(response.status).toBe(200)
 
-      const body = await response.json()
+      const body = (await response.json()) as { id: string }
 
       expect(body).toEqual({
-        action: 'Verifique se o token foi setado.',
-        message: 'Usuário não autorizado.',
-        name: 'UnauthorizedError',
-        statusCode: 401,
+        ...cups[0],
+        id: body.id,
+      })
+    })
+
+    test('getting cup not stock', async () => {
+      const response = await apiClient.get(`/cups/${cups[3].id}`)
+
+      expect(response.status).toBe(404)
+
+      const body = (await response.json()) as { id: string }
+
+      expect(body).toEqual({
+        action: 'Verifique a propriedade "id".',
+        message: 'Copo não existe.',
+        name: 'NotFoundError',
+        statusCode: 404,
       })
     })
 
@@ -59,26 +68,6 @@ describe('GET /cups:id', () => {
     })
   })
 
-  describe('Unauthoriized User', () => {
-    test('getting new cup without delete:cups rule', async () => {
-      const response = await apiClient.get('/cups/id', {
-        token,
-        type: 'Bearer',
-      })
-
-      expect(response.status).toBe(401)
-
-      const bory = await response.json()
-
-      expect(bory).toEqual({
-        action: 'Verifique se usuário tem rulle "read:cups".',
-        message: 'Usuário não autorizado.',
-        name: 'UnauthorizedError',
-        statusCode: 401,
-      })
-    })
-  })
-
   describe('Admin user', () => {
     test('getting cup', async () => {
       const response = await apiClient.get(`/cups/${cups[0].id}`, {
@@ -88,14 +77,15 @@ describe('GET /cups:id', () => {
 
       expect(response.status).toBe(200)
 
-      const bory = (await response.json()) as { id: string }
+      const body = (await response.json()) as { id: string }
 
-      expect(bory).toEqual({
+      expect(body).toEqual({
         size: 300,
-        id: bory.id,
+        id: body.id,
         in_stock: true,
-        price: 10,
+        price: 1000,
         description: 'Tem copo',
+        quantity_additional: 3,
       })
     })
 
@@ -110,7 +100,7 @@ describe('GET /cups:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique a propiedade "id".',
+        action: 'Verifique a propriedade "id".',
         message: 'Copo não existe.',
         name: 'NotFoundError',
         statusCode: 404,

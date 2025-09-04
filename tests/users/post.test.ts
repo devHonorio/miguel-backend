@@ -8,10 +8,10 @@ let tokenAdmin: string
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   await orchestrator.setUserAdmin()
-  const { access_token: access_token_adimin } = await apiClient.authAdmin()
-  tokenAdmin = access_token_adimin
+  const { access_token: access_token_admin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_admin
 
   await orchestrator.setUser()
   const { access_token } = await apiClient.auth()
@@ -25,7 +25,7 @@ describe('POST /users', () => {
       name: 'vanusa pereira',
       phone: '46999222970',
       password: '1234',
-      rulles: ['read:users', 'write:users'],
+      rules: ['read:users', 'write:users'],
     }
     test('creating user admin', async () => {
       const response = await apiClient.post('/users', user, {
@@ -37,7 +37,7 @@ describe('POST /users', () => {
 
       const { password, ...rest } = user
 
-      expect(body).toEqual(rest)
+      expect(body).toEqual({ ...rest, phone: `55${user.phone}` })
     })
 
     test('creating user with length phone invalid', async () => {
@@ -57,7 +57,7 @@ describe('POST /users', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "phone"',
+        action: 'Verifique se a propriedade "phone"',
         message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
         name: 'BadRequestError',
         statusCode: 400,
@@ -75,14 +75,14 @@ describe('POST /users', () => {
 
       const body = await response.json()
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "phone"',
+        action: 'Verifique se a propriedade "phone"',
         message: 'Telefone é obrigatório.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
 
-    test('creating user none lastname', async () => {
+    test('creating user none last name', async () => {
       const user = { id: '3', name: 'José', phone: '44998692094' }
       const response = await apiClient.post('/users', user, {
         token: tokenAdmin,
@@ -94,7 +94,7 @@ describe('POST /users', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "name"',
+        action: 'Verifique se a propriedade "name"',
         message: 'Digite seu nome completo.',
         name: 'BadRequestError',
         statusCode: 400,
@@ -107,7 +107,7 @@ describe('POST /users', () => {
         name: 'José H. de Oliveira',
         phone: '44998692094',
         password: '',
-        rulles: [],
+        rules: [],
       }
       const response = await apiClient.post('/users', user, {
         token: tokenAdmin,
@@ -119,14 +119,14 @@ describe('POST /users', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "name"',
+        action: 'Verifique se a propriedade "name"',
         message: 'Nome não deve ter abreviações.',
         name: 'BadRequestError',
         statusCode: 400,
       })
     })
   })
-  describe('Anonymouns user', () => {
+  describe('Anonymous user', () => {
     test('creating user', async () => {
       const user = {
         id: '1',
@@ -172,13 +172,13 @@ describe('POST /users', () => {
     })
   })
 
-  describe('Unauthoriized User', () => {
+  describe('Unauthorized User', () => {
     const user = {
       id: '2',
       name: 'vanusa pereira',
       phone: '46999222970',
       password: '1234',
-      rulles: ['read:users', 'write:users'],
+      rules: ['read:users', 'write:users'],
     }
     test('creating new user without write:users rule', async () => {
       const response = await apiClient.post('/users', user, {
@@ -188,9 +188,9 @@ describe('POST /users', () => {
 
       expect(response.status).toBe(401)
 
-      const bory = await response.json()
-      expect(bory).toEqual({
-        action: 'Verifique se usuário tem rulle "write:users".',
+      const body = await response.json()
+      expect(body).toEqual({
+        action: 'Verifique se usuário tem rule "write:users".',
         message: 'Usuário não autorizado.',
         name: 'UnauthorizedError',
         statusCode: 401,

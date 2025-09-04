@@ -1,0 +1,7 @@
+services:
+  evolution-db:
+    container_name: evolution-db
+    image: postgres:17.4-alpine3.21
+
+    env_file:
+      - ../.env.evolution

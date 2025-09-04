@@ -5,13 +5,17 @@ import ErrorBase, { InternalServerError } from './errors/error-base'
 import cors from 'cors'
 
 const app = express()
+const environments = {
+  preview: 'https://miguelacaipreview.vercel.app',
+  development: 'http://localhost:3000',
+  production: 'https://miguelacai.vercel.app',
+}
+const vercelTargetEnv = (process.env.VERCEL_TARGET_ENV ??
+  'production') as keyof typeof environments
 
 app.use(
   cors({
-    origin:
-      process.env.VERCEL_TARGET_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://miguelacai.vercel.app',
+    origin: environments[vercelTargetEnv],
   }),
 )
 

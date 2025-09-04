@@ -3,15 +3,22 @@ import Cup from './entities/Cup'
 import cupServices from './services'
 
 const create: RequestHandler = async (req, res) => {
-  const cupBory = Cup.create(req.body)
+  const cupBody = Cup.create(req.body)
 
-  const cup = await cupServices.create(cupBory)
+  const cup = await cupServices.create(cupBody)
 
   res.status(201).json(cup)
 }
 
 const findAll: RequestHandler = async (req, res) => {
-  const cups = await cupServices.findAll()
+  if (req.user?.is_admin) {
+    const cups = await cupServices.findAll()
+    res.json(cups)
+    return
+  }
+
+  const cups = await cupServices.findInStock()
+
   res.json(cups)
 }
 
@@ -26,15 +33,21 @@ const remove: RequestHandler = async (req, res) => {
 const findUnique: RequestHandler = async (req, res) => {
   const { id } = req.params
 
-  const cup = await cupServices.findUnique(id)
+  if (req.user?.is_admin) {
+    const cup = await cupServices.findUnique(id)
+    res.json(cup)
+    return
+  }
+
+  const cup = await cupServices.findUniqueInStock(id)
 
   res.json(cup)
 }
 
 const update: RequestHandler = async (req, res) => {
-  const cupBory = Cup.update({ id: req.params.id, ...req.body })
+  const cupBody = Cup.update({ id: req.params.id, ...req.body })
 
-  const cup = await cupServices.update(cupBory)
+  const cup = await cupServices.update(cupBody)
 
   res.json(cup)
 }

@@ -11,15 +11,19 @@
     "test": "concurrently --names server,jest -k -s command-jest --hide server --prefix none \"tsx src/server.ts\" \"jest --runInBand\"",
     "posttest": "npm run services:stop",
     "test:watch": "jest --runInBand --watchAll",
-    "services:up": "docker compose -f infra/compose.yaml up -d",
+    "services:up": "docker compose -f infra/compose.yaml up -d && docker compose -f infra/evolution-db.yaml up -d && npm run waitEvolutionDb && docker compose -f infra/evolution-api.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
-    "services:down": "docker compose -f infra/compose.yaml down",
+    "services:down": "docker compose -f infra/compose.yaml down && docker compose -f infra/evolution-db.yaml down && docker compose -f infra/evolution-api.yaml down",
     "migrate:dev": "prisma migrate dev --config prisma/prisma.config.ts ",
     "migrate:deploy": "prisma migrate deploy --config prisma/prisma.config.ts ",
     "generate": "prisma generate --config prisma/prisma.config.ts ",
     "dev": "npm run services:up && npm run waitForPostgres && npm run migrate:dev && tsx setUser.ts && tsx --watch src/server.ts",
     "waitForPostgres": "tsx src/scripts/wait-for-postgres.ts",
-    "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts"
+    "sercivesUpDevelopment": "tsx src/scripts/sercives-up-development.ts",
+    "waitEvolutionDb": "tsx src/scripts/wait-for-evolution-db.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +32,7 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@faker-js/faker": "^9.9.0",
     "@prisma/config": "^6.4.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",

@@ -14,6 +14,7 @@ const cupSchema = z.object({
     invalid_type_error: 'Em estoque deve ser verdadeiro ou falso.',
   }),
   description: z.string().max(300, 'Digite até 300 caracteres.'),
+  quantity_additional: z.number(),
 })
 
 export type CupType = z.infer<typeof cupSchema>
@@ -28,7 +29,7 @@ function create(cup: CupType) {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }
@@ -46,7 +47,7 @@ const remove = (size: number) => {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }
@@ -66,7 +67,7 @@ const update = (cup: CupSchemaUpdateType) => {
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}" está correta.`,
+      action: `Verifique se a propriedade "${err.issues[0].path}" está correta.`,
       cause: error,
     })
   }

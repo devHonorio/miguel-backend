@@ -7,22 +7,21 @@ let tokenAdmin: string
 let token: string
 
 beforeAll(async () => {
-  await orchestrator.cleanUsers()
+  await orchestrator.cleanDb()
   await orchestrator.setUserAdmin()
   await orchestrator.setUser()
 
-  const { access_token: access_token_adimin } = await apiClient.authAdmin()
-  tokenAdmin = access_token_adimin
+  const { access_token: access_token_admin } = await apiClient.authAdmin()
+  tokenAdmin = access_token_admin
 
   const { access_token } = await apiClient.auth()
   token = access_token
 
-  await orchestrator.cleanCups()
   await orchestrator.setCups()
 })
 
 describe('DELETE /cups:id', () => {
-  describe('Anonymouns user', () => {
+  describe('Anonymous user', () => {
     test('deleting cup', async () => {
       const response = await apiClient.delete('/cups/size')
 
@@ -56,7 +55,7 @@ describe('DELETE /cups:id', () => {
     })
   })
 
-  describe('Unauthoriized User', () => {
+  describe('Unauthorized User', () => {
     test('creating new cup without delete:cups rule', async () => {
       const response = await apiClient.delete('/cups/size', {
         token,
@@ -65,10 +64,10 @@ describe('DELETE /cups:id', () => {
 
       expect(response.status).toBe(401)
 
-      const bory = await response.json()
+      const body = await response.json()
 
-      expect(bory).toEqual({
-        action: 'Verifique se usuário tem rulle "delete:cups".',
+      expect(body).toEqual({
+        action: 'Verifique se usuário tem rule "delete:cups".',
         message: 'Usuário não autorizado.',
         name: 'UnauthorizedError',
         statusCode: 401,
@@ -97,7 +96,7 @@ describe('DELETE /cups:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "size" está correta.',
+        action: 'Verifique se a propriedade "size" está correta.',
         message: 'Tamanho do copo deve ser um numero inteiro.',
         name: 'BadRequestError',
         statusCode: 400,
@@ -114,7 +113,7 @@ describe('DELETE /cups:id', () => {
 
       const body = await response.json()
       expect(body).toEqual({
-        action: 'Verifique se a propiedade "size" está correta.',
+        action: 'Verifique se a propriedade "size" está correta.',
         message: 'Tamanho do copo deve ser um numero inteiro.',
         name: 'BadRequestError',
         statusCode: 400,
@@ -132,7 +131,7 @@ describe('DELETE /cups:id', () => {
       const body = await response.json()
 
       expect(body).toEqual({
-        action: 'Verifique a propiedade "size"',
+        action: 'Verifique a propriedade "size"',
         message: 'Copo não existe.',
         name: 'BadRequestError',
         statusCode: 400,

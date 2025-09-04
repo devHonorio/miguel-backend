@@ -1,20 +1,12 @@
 import z, { ZodError } from 'zod'
 import { BadRequestError } from '../../errors/error-base'
+import { phoneSchema } from '../../entities/Phone'
 
 const UserPropertiesValues = {
-  PHONE_LENGTH: 11,
   LENGTH_FOR_NAME: 2,
 } as const
 
-function phoneValidator(phone: string) {
-  return User.removePhoneStr(phone).length === UserPropertiesValues.PHONE_LENGTH
-}
-
-function removePhoneStr(phone: string) {
-  return phone.replace(/[^0-9]/g, '')
-}
-
-function haveNameAndLastname(fullname: string) {
+function haveNameAndLastName(fullname: string) {
   return fullname.includes(' ')
 }
 
@@ -31,57 +23,56 @@ function validationLengthName(fullname: string) {
 function removeUnwantedCharactersOfName(fullname: string) {
   return fullname.replace(/[^a-zA-Z\sçãẽĩõũâêîôûéóáíú]/g, '').trim()
 }
+const rules = z.enum([
+  'read:users',
+  'write:users',
+  'write:cups',
+  'delete:cups',
+  'read:cups',
+  'write:additional',
+  'delete:additional',
+  'read:orders',
+  'delete:orders',
+])
 
-const userSchema = z.object({
+export type RulesEnum = z.infer<typeof rules>
+
+export const userSchema = z.object({
   id: z.string().optional(),
   name: z
     .string()
     .transform((name) => User.removeUnwantedCharactersOfName(name))
-    .refine((name) => User.haveNameAndLastname(name), {
+    .refine((name) => User.haveNameAndLastName(name), {
       message: 'Digite seu nome completo.',
     })
     .refine((name) => User.validationLengthName(name), {
       message: 'Nome não deve ter abreviações.',
     }),
-  phone: z
-    .string({
-      required_error: 'Telefone é obrigatório.',
-    })
-    .transform((phone) => User.removePhoneStr(phone))
-    .refine((phone) => User.phoneValidator(phone), {
-      message: 'Telefone deve conter 11 dígitos contendo DDD e o digito 9.',
-    }),
+  phone: phoneSchema,
   password: z.string(),
-  rulles: z.array(
-    z.enum([
-      'read:users',
-      'write:users',
-      'write:cups',
-      'delete:cups',
-      'read:cups',
-    ]),
-  ),
+  rules: z.array(rules),
+  is_admin: z.boolean().optional(),
 })
 
 export type UserType = z.infer<typeof userSchema>
 
 function create(user: UserType) {
   try {
-    const { name, password, phone, rulles, id } = userSchema.parse(user)
+    const { name, password, phone, rules, id } = userSchema.parse(user)
 
     return {
       id,
       name,
       phone,
       password,
-      rulles,
+      rules,
     }
   } catch (error) {
     const err = error as ZodError
 
     throw new BadRequestError({
       message: err.issues[0].message,
-      action: `Verifique se a propiedade "${err.issues[0].path}"`,
+      action: `Verifique se a propriedade "${err.issues[0].path}"`,
       cause: error,
     })
   }
@@ -89,10 +80,8 @@ function create(user: UserType) {
 
 const User = {
   removeUnwantedCharactersOfName,
-  haveNameAndLastname,
+  haveNameAndLastName: haveNameAndLastName,
   validationLengthName,
-  removePhoneStr,
-  phoneValidator,
   create,
 }
 
