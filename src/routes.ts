@@ -12,6 +12,8 @@ import sendCodeController from './send-code/controller'
 import verifyCodeController from './verify-code/controller'
 import signupController from './signup/controller'
 import usersMiddlewares from './users/entities/middleware'
+import ordersMiddleware from './orders/middleware'
+import ordersController from './orders/controller'
 
 export const routes = Router()
 
@@ -136,6 +138,27 @@ routes.post(
   UserAuthMiddlewares.authMiddleware,
   orderController.create,
 )
+// orders
+routes.get(
+  '/orders',
+  UserAuthMiddlewares.authMiddleware,
+  ordersMiddleware.read,
+  ordersController.listOrders,
+)
+
+routes.delete(
+  '/orders/:id',
+  UserAuthMiddlewares.authMiddleware,
+  ordersMiddleware.delete,
+  ordersController.delete,
+)
+
+routes.get(
+  '/orders/:id',
+  UserAuthMiddlewares.authMiddleware,
+  ordersMiddleware.read,
+  ordersController.findUnique,
+)
 
 // send-code
 routes.post('/send-code', sendCodeController.send)
@@ -145,3 +168,6 @@ routes.post('/verify-code', verifyCodeController.verify)
 
 // signup
 routes.post('/signup', signupController.signup)
+
+// admin order
+routes.post('/orders', ordersController.adminOrderCreate)
