@@ -83,7 +83,7 @@ describe('GET /cups:id', () => {
         size: 300,
         id: body.id,
         in_stock: true,
-        price: 10,
+        price: 1000,
         description: 'Tem copo',
         quantity_additional: 3,
       })

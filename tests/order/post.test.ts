@@ -82,25 +82,25 @@ describe('POST /order', () => {
           {
             size: 300,
             additional: ['morango', 'nutella', 'ninho', 'banana'],
-            price: 14,
+            price: 1400,
           },
           {
             size: 400,
             additional: ['morango', 'nutella', 'ninho', 'banana'],
-            price: 24,
+            price: 2400,
           },
           {
             size: 500,
             additional: ['morango', 'nutella', 'ninho', 'banana'],
-            price: 34,
+            price: 3400,
           },
           {
             size: 600,
             additional: ['morango', 'nutella', 'ninho', 'banana'],
-            price: 44,
+            price: 4400,
           },
         ],
-        totalPrice: 116,
+        totalPrice: 11600,
         address: {},
       })
     })
@@ -143,10 +143,10 @@ describe('POST /order', () => {
               'paçoca',
               'amêndoas',
             ],
-            price: 16,
+            price: 1600,
           },
         ],
-        totalPrice: 16,
+        totalPrice: 1600,
         address: {},
       })
     })
@@ -190,14 +190,14 @@ describe('POST /order', () => {
               'paçoca',
               'amêndoas',
             ],
-            price: 16,
+            price: 1600,
           },
         ],
-        totalPrice: 20,
+        totalPrice: 2000,
         address: {
           address:
             'rua josé - 548, água verde, ampére, perto do colégio caetano.',
-          shippingPrice: 4,
+          shippingPrice: 400,
         },
       })
     })
@@ -215,7 +215,7 @@ describe('POST /order', () => {
           },
         ],
         address_id: addresses[0].id,
-        discount: 10,
+        discount: 1000,
       }
 
       const response = await api.post('/order', order, {
@@ -242,14 +242,14 @@ describe('POST /order', () => {
               'paçoca',
               'amêndoas',
             ],
-            price: 16,
+            price: 1600,
           },
         ],
-        totalPrice: 10,
+        totalPrice: 1000,
         address: {
           address:
             'rua josé - 548, água verde, ampére, perto do colégio caetano.',
-          shippingPrice: 4,
+          shippingPrice: 400,
         },
       })
     })
@@ -267,7 +267,7 @@ describe('POST /order', () => {
           },
         ],
         address_id: addresses[0].id,
-        discount: -10,
+        discount: -1000,
       }
 
       const response = await api.post('/order', order, {

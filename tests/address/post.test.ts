@@ -313,7 +313,7 @@ describe('POST /address', () => {
         district: address.district.toLocaleLowerCase(),
         complement: address.complement?.toLocaleLowerCase(),
         city: address.city.toLocaleLowerCase(),
-        shipping_price: 4,
+        shipping_price: 400,
         address_complete:
           `${address.street} - ${address.number}, ${address.district}, ${address.city}, ${address.complement}`.toLocaleLowerCase(),
         user_id: body.user_id,

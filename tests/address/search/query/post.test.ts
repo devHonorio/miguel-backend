@@ -53,6 +53,7 @@ describe('POST /address/search/:query', () => {
           id: address.id,
           address_complete: address.address_complete,
           complement: address.complement,
+          shipping_price: 400,
         },
       ])
     })
