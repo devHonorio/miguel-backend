@@ -181,7 +181,10 @@ const findUnique = async (id: string) => {
         price: totalPrice,
         cup: { size, price, quantity_additional },
       }) => ({
-        additional,
+        additional: additional.map(({ name, ...rest }) => ({
+          label: name,
+          ...rest,
+        })),
         id: cup_id,
         label: `${size}ml`,
         price: price,
