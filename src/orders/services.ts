@@ -136,7 +136,7 @@ const findUnique = async (id: string) => {
     where: { id },
     select: {
       address: { select: { id: true, address_complete: true } },
-      user: { select: { name: true, id: true } },
+      user: { select: { name: true, id: true, phone: true } },
       discount: true,
       observations: true,
       status: true,
@@ -167,6 +167,7 @@ const findUnique = async (id: string) => {
     address_label: order.address?.address_complete ?? '',
     client_id: order.user.id,
     client_label: order.user.name,
+    phone: order.user.phone,
     discount: order.discount,
     is_delivery: !!order.address?.id,
     observations: order.observations ?? '',
