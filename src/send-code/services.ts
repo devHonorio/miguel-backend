@@ -23,11 +23,20 @@ const send = async (phone: string) => {
 
   setTimeout(
     async () => {
-      const user = await prisma.oneTimeCodes.findUnique({ where: { phone } })
+      const userTemp = await prisma.oneTimeCodes.findUnique({
+        where: { phone },
+      })
 
-      if (user) {
+      const userPermanent = await prisma.user.findUnique({
+        where: { phone, password: '' },
+      })
+
+      if (userTemp) {
         await prisma.oneTimeCodes.delete({ where: { phone } })
-        await prisma.user.delete({ where: { phone } })
+
+        if (userPermanent) {
+          await prisma.user.delete({ where: { phone } })
+        }
       }
     },
     1000 * 60 * 5,
