@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import orderServices from './services'
 import Order from './entities/Order'
 import Zap from '../entities/Zap'
-import { toBRL } from '../utils/toBRL'
+import { toCentsInBRL } from '../utils/toCentInBRL'
 
 const create: RequestHandler = async (req, res) => {
   const { order_items, user_id, address_id, discount } = Order.createOrder({
@@ -19,19 +19,22 @@ const create: RequestHandler = async (req, res) => {
 
   const itemTemplate = order.orderItems.map(
     (item) =>
-      `- *${item.size}ml* ${item.additional.join(', ')} ${toBRL(item.price)}`,
+      `- *${item.size}ml* ${item.additional.join(', ')} ${toCentsInBRL(item.price)}`,
   )
 
   const orderTemplate = `${order.name.toUpperCase()}
 
 ${itemTemplate.join('\n')}
 
-${order.address.address ? `${order.address.address.toUpperCase()} \n*${toBRL(order.address.shippingPrice ?? 4)}*` : 'Retirada no local'}
+${order.address.address ? `${order.address.address.toUpperCase()} \n*${toCentsInBRL(order.address.shippingPrice ?? 4)}*` : 'Retirada no local'}
 
-Total ${toBRL(order.totalPrice)}
+Total ${toCentsInBRL(order.totalPrice)}
 `
   await Zap.sendText(order.phone, orderTemplate)
-  await Zap.sendText(order.phone, 'Aguarde a confirmação do valor do frete.')
+
+  if (address_id) {
+    await Zap.sendText(order.phone, 'Aguarde a confirmação do valor do frete.')
+  }
 
   res.status(201).json(order)
 }
