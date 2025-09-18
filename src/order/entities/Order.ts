@@ -85,7 +85,7 @@ const extractAdditionalTotalPrice = (
   return AdditionalWithPrices.reduce((acc, { price }) => {
     if (price > 0) return acc + price
 
-    if (countAdditional <= quantityAdditional) {
+    if (countAdditional < quantityAdditional) {
       countAdditional++
 
       return acc
