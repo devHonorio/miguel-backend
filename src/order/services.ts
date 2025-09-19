@@ -99,6 +99,7 @@ const create = async ({
       shipping_price,
     },
     select: {
+      id: true,
       user: { select: { name: true, phone: true } },
       total_price: true,
       order_items: {
@@ -113,6 +114,7 @@ const create = async ({
   })
 
   return {
+    id: order.id,
     name: order.user.name,
     phone: order.user.phone,
     orderItems: order.order_items.map((item) => {

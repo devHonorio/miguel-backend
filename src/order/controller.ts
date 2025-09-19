@@ -3,6 +3,8 @@ import orderServices from './services'
 import Order from './entities/Order'
 import Zap from '../entities/Zap'
 import { toCentsInBRL } from '../utils/toCentInBRL'
+import { prisma } from '../../prisma/prisma-client'
+import { InternalServerError } from '../errors/error-base'
 
 const create: RequestHandler = async (req, res) => {
   const { order_items, user_id, address_id, discount } = Order.createOrder({
@@ -37,10 +39,15 @@ ${order.address.address ? `${order.address.address.toUpperCase()} \n*${toCentsIn
 
 Total ${toCentsInBRL(order.totalPrice)}
 `
-  await Zap.sendText(order.phone, orderTemplate)
+  const response = await Zap.sendText(order.phone, orderTemplate)
 
   if (address_id) {
     await Zap.sendText(order.phone, 'Aguarde a confirmação do valor do frete.')
+  }
+
+  if (!response.ok) {
+    await prisma.order.delete({ where: { id: order.id } })
+    throw new InternalServerError('Falha ao confirmar o pedido com o cliente.')
   }
 
   res.status(201).json(order)
