@@ -27,14 +27,14 @@ const send = async (phone: string) => {
         where: { phone },
       })
 
-      const userPermanent = await prisma.user.findUnique({
-        where: { phone, password: '' },
+      const userChecked = await prisma.user.findUnique({
+        where: { phone, checked: true },
       })
 
       if (userTemp) {
         await prisma.oneTimeCodes.delete({ where: { phone } })
 
-        if (userPermanent) {
+        if (!userChecked) {
           await prisma.user.delete({ where: { phone } })
         }
       }

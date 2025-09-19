@@ -7,6 +7,7 @@ import Phone from '../entities/Phone'
 const verify: RequestHandler = async (req, res) => {
   const { phone: phoneReq, code } = req.body
   const phone = Phone.validate(phoneReq)
+
   const {
     id,
     name,

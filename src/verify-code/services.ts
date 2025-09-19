@@ -16,8 +16,9 @@ const verify = async (phone: string, code: string) => {
 
   await prisma.oneTimeCodes.delete({ where: { phone } })
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.update({
     where: { phone },
+    data: { checked: true },
     select: { id: true, name: true, rules: true, phone: true },
   })
 

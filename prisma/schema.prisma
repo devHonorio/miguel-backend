@@ -16,6 +16,7 @@ model User {
   is_admin  Boolean   @default(false)
   addresses Address[]
   orders    Order[]
+  checked   Boolean   @default(false)
 
   @@map("users")
 }
