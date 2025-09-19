@@ -22,6 +22,7 @@ export interface Additional {
   id: string
 }
 const create = async (data: AdminOrderCreateType) => {
+  console.log(data)
   const order = await prisma.order.create({
     data: {
       user_id: data.clientId,
@@ -196,6 +197,48 @@ const findUnique = async (id: string) => {
   }
 }
 
-const ordersServices = { create, listOrders, delete: remove, findUnique }
+interface AdminOrderEditType extends AdminOrderCreateType {
+  id: string
+}
+
+const edit = async (data: AdminOrderEditType) => {
+  await prisma.orderItem.deleteMany({ where: { order_id: data.id } })
+
+  const order = await prisma.order.update({
+    where: { id: data.id },
+    data: {
+      user_id: data.clientId,
+      order_items: {
+        create: data.cups.map((cup) => ({
+          cup_id: cup.id,
+          price: cup.price,
+          additional: { connect: cup.additional },
+        })),
+      },
+      observations: data.observations,
+      address_id: data.addressId ?? null,
+      discount: data.discount,
+      total_price: data.totalPrice,
+      status: data.status,
+      shipping_price: data.shippingPrice,
+    },
+    select: {
+      id: true,
+      user: { select: { name: true } },
+      total_price: true,
+      address_id: true,
+      status: true,
+      created_at: true,
+      updated_at: true,
+    },
+  })
+  const {
+    user: { name },
+    ...rest
+  } = order
+  return { user: name, ...rest }
+}
+
+const ordersServices = { create, listOrders, delete: remove, findUnique, edit }
 
 export default ordersServices

@@ -38,11 +38,19 @@ const findUnique: RequestHandler = async (req, res) => {
   res.json(order)
 }
 
+const edit: RequestHandler = async (req, res) => {
+  const body = Orders.edit(req.body)
+
+  const order = await ordersServices.edit(body)
+
+  res.status(201).json(order)
+}
 const ordersController = {
   adminOrderCreate,
   listOrders,
   delete: remove,
   findUnique,
+  edit,
 }
 
 export default ordersController

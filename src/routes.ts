@@ -160,6 +160,20 @@ routes.get(
   ordersController.findUnique,
 )
 
+routes.post(
+  '/orders',
+  UserAuthMiddlewares.authMiddleware,
+  ordersMiddleware.create,
+  ordersController.adminOrderCreate,
+)
+
+routes.patch(
+  '/orders',
+  UserAuthMiddlewares.authMiddleware,
+  ordersMiddleware.edit,
+  ordersController.edit,
+)
+
 // send-code
 routes.post('/send-code', sendCodeController.send)
 
@@ -168,6 +182,3 @@ routes.post('/verify-code', verifyCodeController.verify)
 
 // signup
 routes.post('/signup', signupController.signup)
-
-// admin order
-routes.post('/orders', ordersController.adminOrderCreate)
