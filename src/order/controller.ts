@@ -19,10 +19,17 @@ const create: RequestHandler = async (req, res) => {
 
   const itemTemplate = order.orderItems.map(
     (item) =>
-      `- *${item.size}ml* ${item.additional.join(', ')} ${toCentsInBRL(item.price)}`,
+      `*${item.size}ml ${toCentsInBRL(item.price)}*
+${item.additional.map((add) => `- ${add}`).join('\n')}
+
+
+`,
   )
 
-  const orderTemplate = `${order.name.toUpperCase()}
+  const orderTemplate = `Oie, recebemos seu pedido, estou verificando se está tudo certo.
+Logo retorno
+  
+${order.name.toUpperCase()}
 
 ${itemTemplate.join('\n')}
 
