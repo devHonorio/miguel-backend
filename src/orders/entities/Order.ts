@@ -36,6 +36,19 @@ const schemaBase = z.object({
     .number({ errorMap: () => ({ message: 'Preço é obrigatório.' }) })
     .min(1, 'Preço deve ser maior de R$ 0,01.'),
   status: z.enum(['cancelado', 'anotado', 'confirmar_pedido', 'rascunho']),
+  hour: z.string(),
+  paymentMethod: z.enum(['pix', 'credit', 'debit', 'cash']),
+  change: z.string(),
+  payments: z.array(
+    z.object({
+      value: z.coerce
+        .number({ errorMap: () => ({ message: 'Valor é obrigatório.' }) })
+        .int()
+        .min(0, 'O valor deve ser maior que R$ 00,00'),
+      paymentMethod: z.enum(['pix', 'credit', 'debit', 'cash']),
+      date: z.coerce.date(),
+    }),
+  ),
 })
 
 const schemaAdminOrderCreate = schemaBase.refine(

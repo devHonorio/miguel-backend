@@ -1,3 +1,4 @@
+import { Order } from '@prisma/client'
 import { prisma } from '../../prisma/prisma-client'
 import { NotFoundError } from '../errors/error-base'
 
@@ -10,6 +11,14 @@ export interface AdminOrderCreateType {
   totalPrice: number
   discount: number
   status: 'cancelado' | 'anotado' | 'confirmar_pedido' | 'rascunho'
+  hour: string
+  change: string
+  paymentMethod: Order['paymentMethod']
+  payments: {
+    date: Date
+    paymentMethod: Order['paymentMethod']
+    value: number
+  }[]
 }
 
 export interface Cup {
@@ -22,7 +31,6 @@ export interface Additional {
   id: string
 }
 const create = async (data: AdminOrderCreateType) => {
-  console.log(data)
   const order = await prisma.order.create({
     data: {
       user_id: data.clientId,
@@ -39,7 +47,12 @@ const create = async (data: AdminOrderCreateType) => {
       total_price: data.totalPrice,
       status: data.status,
       shipping_price: data.shippingPrice,
+      hour: data.hour,
+      change: data.change,
+      paymentMethod: data.paymentMethod,
+      payments: { createMany: { data: data.payments } },
     },
+
     select: {
       id: true,
       user: { select: { name: true } },
@@ -50,6 +63,7 @@ const create = async (data: AdminOrderCreateType) => {
       updated_at: true,
     },
   })
+
   const {
     user: { name },
     ...rest
@@ -154,6 +168,12 @@ const findUnique = async (id: string) => {
           price: true,
         },
       },
+      hour: true,
+      change: true,
+      paymentMethod: true,
+      payments: {
+        select: { paymentMethod: true, date: true, value: true, id: true },
+      },
     },
   })
 
@@ -194,6 +214,10 @@ const findUnique = async (id: string) => {
         total_price: totalPrice,
       }),
     ),
+    hour: order.hour,
+    change: order.change,
+    payment_method: order.paymentMethod,
+    payments: order.payments,
   }
 }
 
@@ -203,6 +227,7 @@ interface AdminOrderEditType extends AdminOrderCreateType {
 
 const edit = async (data: AdminOrderEditType) => {
   await prisma.orderItem.deleteMany({ where: { order_id: data.id } })
+  await prisma.payment.deleteMany({ where: { order_id: data.id } })
 
   const order = await prisma.order.update({
     where: { id: data.id },
@@ -221,6 +246,10 @@ const edit = async (data: AdminOrderEditType) => {
       total_price: data.totalPrice,
       status: data.status,
       shipping_price: data.shippingPrice,
+      hour: data.hour,
+      change: data.change,
+      paymentMethod: data.paymentMethod,
+      payments: { createMany: { data: data.payments } },
     },
     select: {
       id: true,

@@ -1,12 +1,15 @@
 import { prisma } from '../../prisma/prisma-client'
 import { NotFoundError } from '../errors/error-base'
-import Order, { OrderItem } from './entities/Order'
+import Order, { CreateOrderType, OrderItem } from './entities/Order'
 
 interface CreateProps {
   userId: string
   orderItems: OrderItem[]
   addressId?: string
   discount: number
+  hour: string
+  change: string
+  paymentMethod: CreateOrderType['paymentMethod']
 }
 
 const removeDuplicateStrings = (strings: string[]) =>
@@ -45,6 +48,9 @@ const create = async ({
   orderItems,
   addressId,
   discount,
+  hour,
+  change,
+  paymentMethod,
 }: CreateProps) => {
   const cupsIds = orderItems.map(({ cup_id }) => cup_id)
 
@@ -97,6 +103,9 @@ const create = async ({
       },
       status: 'confirmar_pedido',
       shipping_price,
+      hour,
+      change,
+      paymentMethod,
     },
     select: {
       id: true,
@@ -110,6 +119,9 @@ const create = async ({
         },
       },
       address: { select: { address_complete: true, shipping_price: true } },
+      hour: true,
+      change: true,
+      paymentMethod: true,
     },
   })
 
@@ -129,6 +141,9 @@ const create = async ({
       address: order.address?.address_complete,
       shippingPrice: order.address?.shipping_price,
     },
+    hour: order.hour,
+    change: order.change,
+    paymentMethod: order.paymentMethod,
   }
 }
 

@@ -6,8 +6,23 @@ import { toCentsInBRL } from '../utils/toCentInBRL'
 import { prisma } from '../../prisma/prisma-client'
 import { InternalServerError } from '../errors/error-base'
 
+const PaymentMethod = {
+  pix: 'pix',
+  credit: 'cartão de crédito',
+  debit: 'cartão de débito',
+  cash: 'dinheiro',
+}
+
 const create: RequestHandler = async (req, res) => {
-  const { order_items, user_id, address_id, discount } = Order.createOrder({
+  const {
+    order_items,
+    user_id,
+    address_id,
+    discount,
+    change,
+    hour,
+    paymentMethod,
+  } = Order.createOrder({
     ...req.body,
     user_id: req.user?.id,
   })
@@ -17,6 +32,9 @@ const create: RequestHandler = async (req, res) => {
     orderItems: order_items,
     discount,
     addressId: address_id,
+    change,
+    hour,
+    paymentMethod,
   })
 
   const itemTemplate = order.orderItems.map(
@@ -30,6 +48,8 @@ ${item.additional.map((add) => `- ${add}`).join('\n')}
 
   const orderTemplate = `Oie, recebemos seu pedido, estou verificando se está tudo certo.
 Logo retorno
+
+Para às *${order.hour}*, pagamento no *${PaymentMethod[order.paymentMethod]}* ${order.paymentMethod === 'cash' ? `, troco para *${change}*` : ''}
   
 ${order.name.toUpperCase()}
 

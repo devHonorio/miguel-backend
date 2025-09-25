@@ -66,10 +66,10 @@ enum OrderStatus {
 }
 
 model Order {
-  id             String      @id @default(uuid())
-  user           User        @relation(fields: [user_id], references: [id])
+  id             String        @id @default(uuid())
+  user           User          @relation(fields: [user_id], references: [id])
   user_id        String
-  address        Address?    @relation(fields: [address_id], references: [id])
+  address        Address?      @relation(fields: [address_id], references: [id])
   address_id     String?
   order_items    OrderItem[]
   observations   String?
@@ -77,10 +77,32 @@ model Order {
   total_price    Int
   status         OrderStatus
   shipping_price Int
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @updatedAt
+  hour           String
+  change         String
+  paymentMethod  PaymentMethod
+  payments       Payment[]
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
 
   @@map("orders")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  paymentMethod PaymentMethod
+  value         Int
+  date          DateTime
+  order         Order?        @relation(fields: [order_id], references: [id])
+  order_id      String?
+
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  pix
+  credit
+  debit
+  cash
 }
 
 model OrderItem {

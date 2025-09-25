@@ -14,8 +14,12 @@ const schemaCreate = z.object({
     .number()
     .nonnegative('Desconto deve ser maior que zero.')
     .default(0),
+  hour: z.string(),
+  paymentMethod: z.enum(['pix', 'credit', 'debit', 'cash']),
+  change: z.string(),
 })
 
+export type CreateOrderType = z.infer<typeof schemaCreate>
 const createOrder = (data: unknown) => {
   try {
     return schemaCreate.parse(data)
