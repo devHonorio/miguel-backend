@@ -1,7 +1,7 @@
 import z, { ZodError } from 'zod'
 import { BadRequestError } from '../../errors/error-base'
 
-const userSchema = z.object({
+export const addressSchema = z.object({
   street: z
     .string({ errorMap: () => ({ message: 'Rua é obrigatório.' }) })
     .max(200, 'Nome da rua deve ter menos de 200 letras.')
@@ -36,7 +36,7 @@ const userSchema = z.object({
 
 const create = (data: unknown) => {
   try {
-    const userSchemaWithAddressComplete = userSchema.transform((data) => ({
+    const userSchemaWithAddressComplete = addressSchema.transform((data) => ({
       ...data,
       address_complete:
         `${data.street} - ${data.number}, ${data.district}, ${data.city}, ${data.complement}`.toLocaleLowerCase(),

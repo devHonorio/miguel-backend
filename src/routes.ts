@@ -14,6 +14,8 @@ import signupController from './signup/controller'
 import usersMiddlewares from './users/entities/middleware'
 import ordersMiddleware from './orders/middleware'
 import ordersController from './orders/controller'
+import addressesMiddleware from './addresses/middleware'
+import addressesController from './addresses/controller'
 
 export const routes = Router()
 
@@ -182,3 +184,47 @@ routes.post('/verify-code', verifyCodeController.verify)
 
 // signup
 routes.post('/signup', signupController.signup)
+
+// addresses
+
+routes.get(
+  '/addresses',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.read,
+  addressesController.listAddress,
+)
+
+routes.get(
+  '/addresses',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.write,
+  addressesController.listAddress,
+)
+
+routes.post(
+  '/addresses',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.write,
+  addressesController.create,
+)
+
+routes.get(
+  '/addresses/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.read,
+  addressesController.findUnique,
+)
+
+routes.patch(
+  '/addresses/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.write,
+  addressesController.update,
+)
+
+routes.delete(
+  '/addresses/:id',
+  UserAuthMiddlewares.authMiddleware,
+  addressesMiddleware.delete,
+  addressesController.delete,
+)

@@ -35,6 +35,9 @@ const rules = z.enum([
   'delete:orders',
   'update:orders',
   'write:orders',
+  'write:addresses',
+  'read:addresses',
+  'delete:addresses',
 ])
 
 export type RulesEnum = z.infer<typeof rules>
