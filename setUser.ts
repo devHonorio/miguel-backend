@@ -18,7 +18,7 @@ const main = async () => {
     ],
     name: 'Admin',
     password: await hash(`${process.env.ADMIN_PASSWORD}`, SALT_OR_ROUNDS),
-    phone: '0000000000000',
+    phone: '5500000000000',
     is_admin: true,
   }
   await prisma.user.upsert({
