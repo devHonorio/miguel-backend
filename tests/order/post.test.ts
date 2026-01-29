@@ -77,7 +77,7 @@ describe('POST /order', () => {
 
       expect(body).toEqual({
         name: 'josé honorio',
-        phone: '11111111111',
+        phone: '5511111111111',
         orderItems: [
           {
             size: 300,
@@ -130,7 +130,7 @@ describe('POST /order', () => {
 
       expect(body).toEqual({
         name: 'josé honorio',
-        phone: '11111111111',
+        phone: '5511111111111',
         orderItems: [
           {
             size: 300,
@@ -177,7 +177,7 @@ describe('POST /order', () => {
 
       expect(body).toEqual({
         name: 'josé honorio',
-        phone: '11111111111',
+        phone: '5511111111111',
         orderItems: [
           {
             size: 300,
@@ -229,7 +229,7 @@ describe('POST /order', () => {
 
       expect(body).toEqual({
         name: 'josé honorio',
-        phone: '11111111111',
+        phone: '5511111111111',
         orderItems: [
           {
             size: 300,

@@ -14,8 +14,8 @@ describe('POST /login', () => {
   describe('Anonymous user', () => {
     test('logging in as administrator user', async () => {
       const response = await apiClient.post('/login', {
-        phone: '00000000000',
-        password: '0000',
+        phone: '5500000000000',
+        password: '000000',
       })
 
       expect(response.status).toBe(200)
@@ -33,7 +33,7 @@ describe('POST /login', () => {
 
     test('logging user', async () => {
       const response = await apiClient.post('/login', {
-        phone: '11111111111',
+        phone: '5511111111111',
         password: '1111',
       })
 
@@ -70,7 +70,7 @@ describe('POST /login', () => {
 
     test('logging in with invalid password', async () => {
       const response = await apiClient.post('/login', {
-        phone: '00000000000',
+        phone: '5500000000000',
         password: '0',
       })
 

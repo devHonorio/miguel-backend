@@ -21,8 +21,8 @@ async function setUserAdmin() {
   await prisma.user.create({
     data: {
       name: 'josé honorio',
-      password: await hash('0000', SALT_OR_ROUNDS),
-      phone: '00000000000',
+      password: await hash('000000', SALT_OR_ROUNDS),
+      phone: '5500000000000',
       rules,
       is_admin: true,
     },
@@ -35,7 +35,7 @@ async function setUser() {
     data: {
       name: 'josé honorio',
       password: await hash('1111', SALT_OR_ROUNDS),
-      phone: '11111111111',
+      phone: '5511111111111',
       rules,
     },
     select: { id: true },

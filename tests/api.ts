@@ -30,7 +30,7 @@ export const CreateApiClient = () => {
     const response = await fetch(baseUrl + '/login', {
       method: 'POST',
       headers: headers(),
-      body: JSON.stringify({ phone: '00000000000', password: '0000' }),
+      body: JSON.stringify({ phone: '5500000000000', password: '000000' }),
     })
 
     return (await response.json()) as { access_token: string }
@@ -40,7 +40,7 @@ export const CreateApiClient = () => {
     const response = await fetch(baseUrl + '/login', {
       method: 'POST',
       headers: headers(),
-      body: JSON.stringify({ phone: '11111111111', password: '1111' }),
+      body: JSON.stringify({ phone: '5511111111111', password: '1111' }),
     })
 
     return (await response.json()) as { access_token: string }
