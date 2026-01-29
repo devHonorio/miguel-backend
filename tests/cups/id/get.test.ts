@@ -84,7 +84,7 @@ describe('GET /cups:id', () => {
         id: body.id,
         in_stock: true,
         price: 1000,
-        description: 'Tem copo',
+        description: 'Com esse copo você pode escolher 3 acompanhamentos',
         quantity_additional: 3,
       })
     })
