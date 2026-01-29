@@ -37,4 +37,5 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
 
 app.listen(process.env.PORT ?? 3001, () => {
   console.log('http://localhost:3001')
+  console.log('WhatsApp server http://localhost:8080')
 })
